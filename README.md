@@ -2,7 +2,7 @@
 
 <img src="./res/plot_lnd_pareto_combined_llama_mlstm.svg" width="800px" alt="xLSTM Scaling Laws Figure 1"> 
 
->Paper: [Arxiv]()
+>Paper: [http://arxiv.org/abs/2510.02228](http://arxiv.org/abs/2510.02228)
 >
 >Authors: Maximilian Beck, Kajetan Schweighofer, Sebastian Böck, Sebastian Lehner, Sepp Hochreiter
 
@@ -30,6 +30,13 @@ xlstm_scaling_laws/
 ├── notebooks/               # Jupyter notebooks for analysis and visualization
 ├── scripts/                 # Training and evaluation scripts
 ├── xlstm_scaling_laws/      # Main library for the scaling law analysis
+│   ├── analysis/            # Analysis modules for differen scaling law experiments
+│   ├── common/              # Common utilities and data loading functions
+│   ├── fitting/             # Statistical fitting functions for scaling laws
+│   ├── flops/               # FLOP counting for different model architectures
+│   ├── load_data/           # Data loading and preprocessing utilities
+│   ├── model_accounting/    # Model parameter, FLOPs and MemOps accounting
+│   └── params/              # Parameter counting for different architectures
 ├── requirements.txt         # Python dependencies
 └── README.md                # This file
 ```
@@ -65,9 +72,9 @@ Please cite our papers if you use this codebase, or otherwise find our work valu
   title        = {{xLSTM Scaling Laws}: Competitive Performance with Linear Time-Complexity},
   author       = {Maximilian Beck and Kajetan Schweighofer and Sebastian Böck and Sebastian Lehner and Sepp Hochreiter},
   year         = {2025},
-  volume       = {},
+  volume       = {2510.02228},
   journal      = {arXiv},
   primaryclass = {cs.LG},
-  url          = {}
+  url          = {http://arxiv.org/abs/2510.02228}
 }
 ```
