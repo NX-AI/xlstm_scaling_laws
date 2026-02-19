@@ -1,9 +1,9 @@
 import logging
+import json
 import traceback
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Literal, Type
-
 import pandas as pd
 
 from ..flops.count_flops import (
@@ -37,6 +37,11 @@ class BaseRunData:
 
     name: str
     run_tag: str | None
+    run_id: str
+    """Unique run_id. This is the concatenation of the ids of the individual runs that are combined into this RunData object. 
+    If only a single run is used, then this is just the id of that run.
+    Format: id1-id2-...-idN
+    """
 
     model_type: str
     model_kwargs: dict[str, Any]
@@ -204,6 +209,13 @@ class BaseRunData:
         """Runtime in seconds."""
         return sum(run.runtime for run in self._raw_data)
 
+    @property
+    def model_checkpoint_paths(self) -> list[str]:
+        """Get the model checkpoint paths from the raw data."""
+        # Since this depends on the specific format of the WandBRunData, we need to implement this in the specific RunData class that inherits from BaseRunData.
+
+        raise NotImplementedError
+
     @classmethod
     def create_run_data_from_wandb_run_data(
         cls,
@@ -220,7 +232,7 @@ class BaseRunData:
         run_tag: str | None = None,
         config_calc_run_data: RunDataCalcConfig | None = None,
     ) -> "BaseRunData":
-        """If a list is passed, they must have the same name.
+        """If a list is passed, the runs must have the same name.
         The remaining data is taken from the first run in the list.
         """
         if not isinstance(wandb_runs, list):
@@ -240,9 +252,9 @@ class BaseRunData:
         for log_key in log_keys:
             key_logs = []
             for run in wandb_runs:
-                assert log_key in run.logs, (
-                    f"Log key '{log_key}' not found in run '{run.name}'"
-                )
+                assert (
+                    log_key in run.logs
+                ), f"Log key '{log_key}' not found in run '{run.name}'"
                 key_logs.append(run.logs[log_key])
 
             log_df = pd.concat(key_logs).reset_index(level=0, drop=True)
@@ -250,6 +262,7 @@ class BaseRunData:
 
         run_data.logs = logs
         run_data._raw_data = wandb_runs
+        run_data.run_id = "-".join(run.id for run in wandb_runs)
 
         return run_data
 
@@ -300,6 +313,7 @@ class BaseRunData:
             return {
                 "name": self.name,
                 "run_tag": self.run_tag,
+                "run_id": self.run_id,
                 "model_type": self.model_type,
                 "global_batch_size": self.global_batch_size,
                 "learning_rate": self.learning_rate,
@@ -333,6 +347,7 @@ class BaseRunData:
                 **self.final_val_metrics,
                 **self.model_kwargs,
                 "status": self.status,
+                "model_checkpoint_paths": json.dumps(self.model_checkpoint_paths),
             }
         except Exception as e:
             LOGGER.warning(
@@ -342,6 +357,7 @@ class BaseRunData:
             return {
                 "name": self.name,
                 "run_tag": self.run_tag,
+                "run_id": self.run_id,
                 "model_type": self.model_type,
             }
 

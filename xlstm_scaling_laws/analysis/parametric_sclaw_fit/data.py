@@ -45,6 +45,8 @@ def get_all_parametric_sclaw_fit_data_dataframe(
         "head_dim_v",
         "IsoFLOP",
         "train/.loss_mean",
+        "run_id",
+        "model_checkpoint_paths"
     ]
 
     # load the isoflop data
