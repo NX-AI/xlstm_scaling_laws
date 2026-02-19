@@ -67,7 +67,7 @@ def create_ctx_powerlaw_plot(
     for e, elem in enumerate(elements):
         selector = "context_length" if x_col == "flops_mean" else "isoflop_tag"
         isoflop_polyfits_df = all_polyfit_nparam_ntok_df[
-            all_polyfit_nparam_ntok_df[selector] == elem 
+            all_polyfit_nparam_ntok_df[selector] == elem
         ]
 
         # Filter the dataframe to only include rows with FLOPs within the specified range
@@ -91,8 +91,8 @@ def create_ctx_powerlaw_plot(
         )
 
         isoflop_style_dict = get_isoflop_styledict_with_colors(
-                isoflop_tags=isoflop_tags, seaborn_color_palette="deep"
-            )
+            isoflop_tags=isoflop_tags, seaborn_color_palette="deep"
+        )
 
         fit_ctx_color_dict = get_context_styledict_with_colors(context_lengths)
 
@@ -102,9 +102,7 @@ def create_ctx_powerlaw_plot(
             isoflop_style_dict = {
                 k: v for k, v in zip(isoflop_tags, fit_ctx_color_dict.values())
             }
-            fit_ctx_color_dict = {
-                k: v for k, v in zip(context_lengths, save)
-            }
+            fit_ctx_color_dict = {k: v for k, v in zip(context_lengths, save)}
 
         ax = plot_powerlaw_fits(
             ax=ax,
@@ -123,11 +121,15 @@ def create_ctx_powerlaw_plot(
             },
             model_type_fit_style_dict={
                 "llama": {
-                    "color": fit_ctx_color_dict.get(context_lengths[e%len(context_lengths)], {"color": "black"})["color"],
+                    "color": fit_ctx_color_dict.get(
+                        context_lengths[e % len(context_lengths)], {"color": "black"}
+                    )["color"],
                     "linestyle": "--",
                 },
                 "mlstm_v1": {
-                    "color": fit_ctx_color_dict.get(context_lengths[e%len(context_lengths)], {"color": "black"})["color"],
+                    "color": fit_ctx_color_dict.get(
+                        context_lengths[e % len(context_lengths)], {"color": "black"}
+                    )["color"],
                     "linestyle": "-",
                 },
             },
@@ -156,8 +158,8 @@ def create_ctx_powerlaw_plot(
         ax.set_yticks(yticks)
         if ytick_labels is not None:
             ax.set_yticklabels(ytick_labels)
-    
+
     # hide minor tick labels
-    ax.tick_params(axis='y', which='minor', label1On=False) 
+    ax.tick_params(axis="y", which="minor", label1On=False)
 
     return ax

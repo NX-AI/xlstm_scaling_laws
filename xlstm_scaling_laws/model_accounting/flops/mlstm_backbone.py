@@ -45,31 +45,32 @@ flop_ffn = flop_ffn_prenorm_skip + flop_ffn_mlps + flop_ffn_act
 flop_final_unembed = 2 * d_model * n_vocab
 flop_outnorm = d_model * F_norm
 
-flop_mlstm_backbone_blocks = (
-    n_blocks * (flop_mlstm_mlstm_layer + flop_ffn)
+flop_mlstm_backbone_blocks = n_blocks * (flop_mlstm_mlstm_layer + flop_ffn)
+flop_mlstm_backbone_withfinallinear = (
+    flop_mlstm_backbone_blocks + flop_outnorm + flop_final_unembed
 )
-flop_mlstm_backbone_withfinallinear = flop_mlstm_backbone_blocks + flop_outnorm + flop_final_unembed
 
 # we set all the flop factors
 subs_dict = {F_norm: 3, F_swish: 1, F_skip: 1, F_sig: 1}
 
 fn_flop_mlstm_backbone_withfinallinear = sp.lambdify(
     (n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv),
-    flop_mlstm_backbone_withfinallinear.subs(subs_dict).subs(d_model, d_hv*n_headq),
+    flop_mlstm_backbone_withfinallinear.subs(subs_dict).subs(d_model, d_hv * n_headq),
     modules=["numpy"],
 )
 fn_flop_mlstm_backbone = sp.lambdify(
     (n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv),
-    flop_mlstm_backbone_blocks.subs(subs_dict).subs(d_model, d_hv*n_headq),
+    flop_mlstm_backbone_blocks.subs(subs_dict).subs(d_model, d_hv * n_headq),
     modules=["numpy"],
 )
 
-def count_flops_mlstm_backbone(n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv, with_unembed=True):
+
+def count_flops_mlstm_backbone(
+    n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv, with_unembed=True
+):
     if with_unembed:
         return fn_flop_mlstm_backbone_withfinallinear(
             n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv
         )
     else:
-        return fn_flop_mlstm_backbone(
-            n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv
-        )
+        return fn_flop_mlstm_backbone(n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv)

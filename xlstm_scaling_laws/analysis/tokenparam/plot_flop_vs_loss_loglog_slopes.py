@@ -205,12 +205,13 @@ def get_combined_flop_loss_loglog_slope_plot(
     legend_labels = []
     for legend_handle, legend_label_dataframe in zip(handles, labels):
         legend_handles.append(legend_handle)
-        legend_labels.append(style_tags_legend.get(legend_label_dataframe, legend_label_dataframe))
-    
+        legend_labels.append(
+            style_tags_legend.get(legend_label_dataframe, legend_label_dataframe)
+        )
+
     legend = fig.legend(handles=legend_handles, labels=legend_labels, **legend_kwargs)
     for text, label in zip(legend.get_texts(), labels):
         if label in style_tags_legend:
-            text.set_fontweight('bold')
-
+            text.set_fontweight("bold")
 
     return fig

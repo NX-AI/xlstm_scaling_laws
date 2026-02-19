@@ -1,6 +1,6 @@
 # xLSTM Scaling Laws: Competitive Performance with Linear Time-Complexity
 
-<img src="./res/plot_lnd_pareto_combined_llama_mlstm.svg" width="800px" alt="xLSTM Scaling Laws Figure 1"> 
+<img src="./res/plot_lnd_pareto_combined_llama_mlstm.svg" width="800px" alt="xLSTM Scaling Laws Figure 1">
 
 >Paper: [http://arxiv.org/abs/2510.02228](http://arxiv.org/abs/2510.02228)
 >
@@ -26,7 +26,7 @@ This repository is organized into the following main components:
 ```
 xlstm_scaling_laws/
 ├── data/                    # Run data for our Dataset of Training runs
-├── data_lnd_fits/           # Results of our parametric L(N,D) fits 
+├── data_lnd_fits/           # Results of our parametric L(N,D) fits
 ├── notebooks/               # Jupyter notebooks for analysis and visualization
 ├── scripts/                 # Training and evaluation scripts
 ├── xlstm_scaling_laws/      # Main library for the scaling law analysis
@@ -47,7 +47,7 @@ We provide all experiment logs and run data in several pickle files in the `data
 
 In `xlstm_scaling_laws/common/` we provide the functions to load and access the raw training log data extracted from wandb.
 
-In `xlstm_scaling_laws/load_data` we provide functions to extract the preprocessed data for our scaling law analyses. 
+In `xlstm_scaling_laws/load_data` we provide functions to extract the preprocessed data for our scaling law analyses.
 
 Please have a look at the notebooks in `notebooks/paper_plots/` for examples on how to access and visualize the data.
 

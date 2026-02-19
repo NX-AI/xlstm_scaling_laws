@@ -24,7 +24,7 @@ def create_token_param_ratio_plot(
         markers=True,
         palette=sns.color_palette(
             "rocket_r", n_colors=len(data_df["Model Size"].unique())
-        ), #sns.color_palette("deep"),
+        ),  # sns.color_palette("deep"),
         ax=ax,
     )
     sns.despine()
@@ -36,9 +36,10 @@ def create_token_param_ratio_plot(
 
     if y_axis_log:
         from matplotlib.ticker import FuncFormatter
+
         ax.set_yscale("log")
         ax.yaxis.grid(which="minor", visible=True)
-        ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: f'{x:.1f}'))
+        ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: f"{x:.1f}"))
         ax.set_ylabel("Validation Loss (logscale)")
     else:
         ax.set_ylabel("Validation Loss")
@@ -54,6 +55,7 @@ def create_num_token_training_plot(
     y_axis_log: bool = True,
 ) -> Figure:
     from matplotlib.ticker import LogLocator, ScalarFormatter
+
     sns.set_style("whitegrid")
     sns.set_context(context=context, font_scale=fontscale)
     fig = plt.figure(figsize=figsize)
@@ -85,9 +87,10 @@ def create_num_token_training_plot(
 
     if y_axis_log:
         from matplotlib.ticker import FuncFormatter
+
         ax.set_yscale("log")
         ax.yaxis.grid(which="minor", visible=True)
-        ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: f'{x:.1f}'))
+        ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: f"{x:.1f}"))
         ax.set_ylabel("Validation Loss (logscale)")
     else:
         ax.set_ylabel("Validation Loss")
@@ -104,6 +107,7 @@ def create_training_flop_plot(
     y_axis_log: bool = True,
 ) -> Figure:
     from matplotlib.ticker import FuncFormatter
+
     sns.set_style("whitegrid")
     sns.set_context(context=context, font_scale=fontscale)
     fig = plt.figure(figsize=figsize)
@@ -131,9 +135,10 @@ def create_training_flop_plot(
     ax.xaxis.grid(True)
     if y_axis_log:
         from matplotlib.ticker import FuncFormatter
+
         ax.set_yscale("log")
         ax.yaxis.grid(which="minor", visible=True)
-        ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: f'{x:.1f}'))
+        ax.yaxis.set_minor_formatter(FuncFormatter(lambda x, _: f"{x:.1f}"))
         ax.set_ylabel("Validation Loss (logscale)")
     else:
         ax.set_ylabel("Validation Loss")

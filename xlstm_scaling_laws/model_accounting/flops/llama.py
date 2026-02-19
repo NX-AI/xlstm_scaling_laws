@@ -79,7 +79,7 @@ def count_llama_model_flops__generation(
         d_qk=d_qk,
         d_hv=d_hv,
         n_headkv=n_headkv,
-        with_unembed=False, # we do not compute the unembedding for prefill, only during generation
+        with_unembed=False,  # we do not compute the unembedding for prefill, only during generation
     )
 
     flops_attention = count_flops_attention_generation(

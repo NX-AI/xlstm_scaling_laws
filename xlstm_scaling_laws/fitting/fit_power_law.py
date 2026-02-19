@@ -1,3 +1,7 @@
+"""In this module we fit a power law to the FLOP-Param and FLOP-Token relationship.
+Similar to Approach 1&2 in the Chinchilla paper or Section 3.2.1 in the Scaling Laws paper.
+"""
+
 import logging
 from typing import Any, Literal
 
@@ -7,11 +11,6 @@ from matplotlib.axes import Axes
 from scipy.optimize import curve_fit
 
 LOGGER = logging.getLogger(__name__)
-
-
-"""In this module we fit a power law to the FLOP-Param and FLOP-Token relationship.
-Similar to Approach 1&2 in the Chinchilla paper or Section 3.2.1 in the Scaling Laws paper.
-"""
 
 
 def power_law(x, a, alpha):
@@ -128,7 +127,7 @@ def plot_powerlaw_fits(
         "mlstm_v1": {"marker": "o", "color": "purple", "s": 100, "edgecolor": "black"},
     },
     model_type_label_mapping: dict[str, str] = {
-        "llama":    "Transformer",
+        "llama": "Transformer",
         "mlstm_v1": "xLSTM         ",
     },
     model_type_fit_style_dict: dict[str, dict[str, Any]] = {
@@ -140,15 +139,17 @@ def plot_powerlaw_fits(
     xlim: tuple[float, float] = (1e17, 1e23),
     model_type_alpha_override: dict[str, float] | None = None,
     add_fit_result_to_legend_label: bool = True,
-    plot_type: Literal["num_tokens_training", "num_params"] = None, # only used for legend label
+    plot_type: Literal[
+        "num_tokens_training", "num_params"
+    ] = None,  # only used for legend label
     legend_kwargs: dict[str, Any] | None = {},
     num_points: int = 100,
 ) -> Axes:
     """Plot the power law fits for each model type in the dataframe.
-    
+
     Args:
 
-    
+
     """
 
     x_vals = np.logspace(np.log10(xlim[0]), np.log10(xlim[1]), num=num_points, base=10)
@@ -162,20 +163,32 @@ def plot_powerlaw_fits(
         fit_res_label = ""
         if add_fit_result_to_legend_label:
             if plot_type == "num_params":
-                fit_res_label = r"$a$=%.3f" % alpha + r", $A'$=%.3f" % a #r"$\alpha$=%.3f" % alpha + r", $A$=%.3f" % a #r"$\alpha = %.3f$" % alpha + r", $A = %.3f$" % a
+                fit_res_label = (
+                    r"$a$=%.3f" % alpha + r", $A'$=%.3f" % a
+                )  # r"$\alpha$=%.3f" % alpha + r", $A$=%.3f" % a #r"$\alpha = %.3f$" % alpha + r", $A = %.3f$" % a
                 if a > 1e4:
                     fit_res_label = r"$a$=%.3f" % alpha + r", $A'$=%.1e" % a
                     # remove the leading 0 from the exponent
                     if a < 1e10:
-                        fit_res_label = fit_res_label.split("e+")[0] + "e+" + fit_res_label.split("e+")[1][1]
+                        fit_res_label = (
+                            fit_res_label.split("e+")[0]
+                            + "e+"
+                            + fit_res_label.split("e+")[1][1]
+                        )
             elif plot_type == "num_tokens_training":
-                fit_res_label = r"$b$=%.3f" % alpha + r", $B'$=%.3f" % a #r"$\beta$=%.3f" % alpha + r", $B$=%.3f" % a #r"$\beta = %.3f$" % alpha + r", $B = %.3f$" % a
+                fit_res_label = (
+                    r"$b$=%.3f" % alpha + r", $B'$=%.3f" % a
+                )  # r"$\beta$=%.3f" % alpha + r", $B$=%.3f" % a #r"$\beta = %.3f$" % alpha + r", $B = %.3f$" % a
                 if a > 1e4:
                     fit_res_label = r"$b$=%.3f" % alpha + r", $B'$=%.1e" % a
                     if a < 1e10:
                         # remove the leading 0 from the exponent
-                        fit_res_label = fit_res_label.split("e+")[0] + "e+" + fit_res_label.split("e+")[1][1]
-        
+                        fit_res_label = (
+                            fit_res_label.split("e+")[0]
+                            + "e+"
+                            + fit_res_label.split("e+")[1][1]
+                        )
+
         y_vals = power_law(x_vals, a, alpha)
         ax.plot(
             x_vals,

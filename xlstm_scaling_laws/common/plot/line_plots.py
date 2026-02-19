@@ -25,7 +25,9 @@ def create_compare_line_plot(
     yticks: list[float] = None,
     ylim: tuple[float, float] = (),
     xlim: tuple[float, float] = (),
-    legend_label_mode: Literal["include_compare_param_name", "label_name_only"] = "label_name_only",
+    legend_label_mode: Literal[
+        "include_compare_param_name", "label_name_only"
+    ] = "label_name_only",
     legend_args: dict[str, Any] = dict(loc="lower left", bbox_to_anchor=(1.0, 0.0)),
     legend_order: list[str] = None,
     figsize=(2 * 12 * 1 / 2.54, 2 * 8 * 1 / 2.54),
@@ -73,7 +75,9 @@ def create_compare_line_plot(
 
     if isinstance(compare_parameter, list):
         df = pd.DataFrame(summary_df)
-        df["_".join(compare_parameter)] = df[compare_parameter].astype(str).apply("_".join, axis=1)
+        df["_".join(compare_parameter)] = (
+            df[compare_parameter].astype(str).apply("_".join, axis=1)
+        )
         df.drop(compare_parameter, axis=1, inplace=True)
         summary_df = df
         compare_parameter = "_".join(compare_parameter)
@@ -95,7 +99,9 @@ def create_compare_line_plot(
 
     # get x and y axis
     for cpv in comp_param_vals:
-        df = summary_df.loc[summary_df[compare_parameter] == cpv].drop(compare_parameter, axis=1)
+        df = summary_df.loc[summary_df[compare_parameter] == cpv].drop(
+            compare_parameter, axis=1
+        )
         x_vals = df[x_axis].values
         for y_ax in y_axis:
             y_vals = df[y_ax].values

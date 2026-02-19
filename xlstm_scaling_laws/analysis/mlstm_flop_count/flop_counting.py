@@ -120,6 +120,7 @@ def make_mlstm_fw_flop_comparison(
 
     return df
 
+
 def make_mlstm_fwbw_flop_bw_apporox_comparison(
     model_config_dict: dict[str, dict],
     context_length: int = 8192,

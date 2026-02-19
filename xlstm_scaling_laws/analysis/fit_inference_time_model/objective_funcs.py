@@ -6,8 +6,8 @@ import pandas as pd
 
 from xlstm_scaling_laws.load_data.inference_time import load_inference_time_data
 from xlstm_scaling_laws.model_accounting.inference_time_model.llama_runtime_model import (
+    predict_runtime_llama_step_time,
     predict_runtime_llama_ttft,
-    predict_runtime_llama_step_time
 )
 from xlstm_scaling_laws.model_accounting.inference_time_model.mlstm_runtime_model import (
     predict_runtime_mlstm_step_time,
@@ -136,6 +136,7 @@ def objective_huber_inference_time_model(
     loss = y_pred - y_target_runtime_measured
 
     if reduce_loss == "none":
+
         def reduce_fn(x, *args, **kwargs):
             return x
     elif reduce_loss == "sum":
@@ -258,6 +259,8 @@ def get_inference_time_model_objective_func(
             eps_bp=eps_bp,
         )
 
-        return objective_huber_inference_time_model(**kwargs, fit_model=config.fit_model, fit_data=config.fit_data)
+        return objective_huber_inference_time_model(
+            **kwargs, fit_model=config.fit_model, fit_data=config.fit_data
+        )
 
     return objective_func, df

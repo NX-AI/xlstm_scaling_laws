@@ -69,7 +69,7 @@ def get_ffn_dim(
         return proj_factor * float(d_model)
     else:
         raise ValueError(f"Invalid round_mode: {round_mode}")
-    
+
     d_ffn = round_fn(d_model * proj_factor)
     d_ffn = ffn_multiple_of * ((d_ffn + ffn_multiple_of - 1) // ffn_multiple_of)
     return int(d_ffn)

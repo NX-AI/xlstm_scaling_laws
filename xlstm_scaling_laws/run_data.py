@@ -8,9 +8,9 @@ from .common.wandb_run_data import WandBRunData
 
 LOGGER = logging.getLogger(__name__)
 
+
 @dataclass
 class RunData(BaseRunData):
-
     def __repr__(self) -> str:
         return super().__repr__()
 
@@ -18,8 +18,8 @@ class RunData(BaseRunData):
     def model_checkpoint_paths(self) -> list[str]:
         """Returns the model checkpoint paths for the run.
         It is a list, because there can be multiple checkpoints for a run (e.g., if the run was resumed from a previous checkpoint).
-        
-        The paths returned are the paths to the wandb root directory, which has been stored in the run directory. 
+
+        The paths returned are the paths to the wandb root directory, which has been stored in the run directory.
         To get the full path to the checkpoint, you need to know how the checkpoints are stored in the run directory. For example, if the checkpoints are stored in a subdirectory called "checkpoints" and the checkpoint files are named "checkpoint_{step}", then the full path to the checkpoint would be:
 
         Returned model checkpoint paths:
@@ -62,7 +62,6 @@ class RunData(BaseRunData):
         )
 
 
-
 # Note: Replace this function with another one, if you change the Config in the WandBRunData class.
 def create_run_data_from_wandb_run_data(
     raw_run_data: WandBRunData,
@@ -81,10 +80,8 @@ def create_run_data_from_wandb_run_data(
             )
         except IndexError:
             LOGGER.warning(
-                (
-                    f"Could not extract chunk size from backend kwargs '{backend_kwargs_str}' from run {raw_run_data}."
-                    "Using default chunk size of 64."
-                )
+                f"Could not extract chunk size from backend kwargs '{backend_kwargs_str}' from run {raw_run_data}."
+                "Using default chunk size of 64."
             )
             chunk_size_str = "64"
         return int(chunk_size_str)
@@ -162,14 +159,19 @@ def create_run_data_from_wandb_run_data(
         else:
             lr = float(lr_str.split(",")[0].split(":")[1].strip())
         return lr
-    
+
     def get_warmup_steps() -> int:
         wu_str = raw_run_data.config.get("optimizer.scheduler", None)
         if wu_str is None:
             LOGGER.warning("Could not extract learning rate, setting to NaN")
             wu = -1
         else:
-            wu = wu_str[wu_str.find("warmup_steps"):].split(",")[0].split(":")[1].strip()
+            wu = (
+                wu_str[wu_str.find("warmup_steps") :]
+                .split(",")[0]
+                .split(":")[1]
+                .strip()
+            )
             wu = int(wu)
         return wu
 

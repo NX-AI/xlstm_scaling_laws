@@ -1,3 +1,5 @@
+"""In this file we define the code to fit the polynomials to the isoflop data."""
+
 import logging
 from typing import Any
 
@@ -7,10 +9,6 @@ from matplotlib.axes import Axes
 from scipy.optimize import curve_fit
 
 LOGGER = logging.getLogger(__name__)
-
-
-"""In this file we define the code to fit the polynomials to the isoflop data.
-"""
 
 
 def second_degree_polynomial(
@@ -213,7 +211,9 @@ def plot_isoflop_polynomial_fits(
 
         # get max and min x values
         if isoflop_tags[0] not in isoflop_df["IsoFLOP"].values:
-            isoflop_tag_df = isoflop_df[isoflop_df["context_length"] == str(isoflop_tag)]
+            isoflop_tag_df = isoflop_df[
+                isoflop_df["context_length"] == str(isoflop_tag)
+            ]
         else:
             isoflop_tag_df = isoflop_df[isoflop_df["IsoFLOP"] == str(isoflop_tag)]
         x_min = isoflop_tag_df[x_col].min()

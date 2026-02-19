@@ -182,10 +182,7 @@ def calculate_model_fwbw_flops_from_fw_flops(
 
     if config.bw_flop_count_mode == "total_factor_2":
         seq_mix_bw_factor = 2.0
-    elif (
-        config.bw_flop_count_mode
-        == "factor_2_linear_custom_seqmix_factor"
-    ):
+    elif config.bw_flop_count_mode == "factor_2_linear_custom_seqmix_factor":
         seq_mix_bw_factor = config.seq_mix_bw_flop_factor
     elif config.bw_flop_count_mode == "factor_2_linear_custom_seqmix_bw_count":
         # we count the seqmix bw flops exactly with a custom function

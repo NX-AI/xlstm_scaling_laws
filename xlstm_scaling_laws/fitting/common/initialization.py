@@ -24,7 +24,9 @@ class ParametricFitInitialization:
         return np.array([self.params[key] for key in self.order])
 
 
-def generate_initialization_sweep(init_grid: dict[str, list[float]]) -> list[ParametricFitInitialization]:
+def generate_initialization_sweep(
+    init_grid: dict[str, list[float]],
+) -> list[ParametricFitInitialization]:
     """
     Generates a list of initialisation parameters for the parametric fit.
     """
@@ -39,11 +41,13 @@ def generate_initialization_sweep(init_grid: dict[str, list[float]]) -> list[Par
 
     return initialisations
 
+
 def x_to_param_dict(x: np.ndarray, order: list[str]) -> dict[str, float]:
     """
     Converts the (initialization) parameters from a numpy array to a dictionary.
     """
     return {key: value for key, value in zip(order, x)}
+
 
 def param_dict_to_str(param_dict: dict[str, float]) -> str:
     """

@@ -34,6 +34,7 @@ def get_plot_mpl_context():
         }
     )
 
+
 def savefig(fig, filename: str):
     dir = Path("./plots/")
     dir.mkdir(parents=True, exist_ok=True)

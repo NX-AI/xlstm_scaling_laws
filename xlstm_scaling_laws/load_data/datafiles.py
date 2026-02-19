@@ -26,6 +26,7 @@ class RunDataSet(StrEnum):
 
     ISOFLOP_MLSTM_CTX8192_LARE_GBS256 = "isoflop_mlstm_ctx8192_large_gbs256"
 
+
 run_data_sets = [member.value for member in RunDataSet]
 
 
@@ -36,14 +37,16 @@ def get_run_data_file(data_set: RunDataSet) -> Path:
 
 def get_run_data_dict(
     data_set: RunDataSet,
-    attention_flop_calc_mode: Literal["chinchilla", "distill_scaling"] = "distill_scaling",
+    attention_flop_calc_mode: Literal[
+        "chinchilla", "distill_scaling"
+    ] = "distill_scaling",
 ) -> dict[str, list[RunData]]:
     """Get the run data dictionary for the given run data set."""
 
     if "isoflop" in data_set:
         group_by = "none"
     else:
-        group_by = "name"   
+        group_by = "name"
 
     run_data_dict = load_run_data(
         wandb_run_data_dict_file=get_run_data_file(data_set),

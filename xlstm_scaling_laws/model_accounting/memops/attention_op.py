@@ -18,8 +18,10 @@ from ..symbols import (
 memop_attn_prefill = T * (d_qk + d_hv) * (n_headq + n_headkv) * bytes_qkv
 
 memop_attn_generation = (
-    T_gen * (d_qk + d_hv) * n_headkv # write keys and values for T_gen tokens
-    + (T_pre * T_gen + 0.5 * T_gen * (T_gen - 1)) * (d_qk + d_hv) * n_headkv # read keys and values for T_gen tokens
+    T_gen * (d_qk + d_hv) * n_headkv  # write keys and values for T_gen tokens
+    + (T_pre * T_gen + 0.5 * T_gen * (T_gen - 1))
+    * (d_qk + d_hv)
+    * n_headkv  # read keys and values for T_gen tokens
 ) * bytes_qkv
 
 subs_dict = {bytes_qkv: bytes_act}

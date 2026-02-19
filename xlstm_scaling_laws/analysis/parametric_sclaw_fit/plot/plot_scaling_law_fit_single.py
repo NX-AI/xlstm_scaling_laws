@@ -116,7 +116,7 @@ def get_scaling_law_lnd_fit_single_plot(
 
     def _get_linestyle_legend_elements():
         legend_elements = []
-        legend_elements.append(Patch(color="none", label=" "*16))
+        legend_elements.append(Patch(color="none", label=" " * 16))
         for (model_key, model_label), linestyle in zip(
             model_tags_label_map.items(), linestyles
         ):
@@ -149,7 +149,7 @@ def get_scaling_law_lnd_fit_single_plot(
                 model_size_color_map[model_size] = color
 
         legend_elements = []
-        legend_elements.append(Patch(color="none", label=" "*16))
+        legend_elements.append(Patch(color="none", label=" " * 16))
         for model_size, color in model_size_color_map.items():
             legend_elements.append(
                 plt.Line2D(
@@ -165,9 +165,7 @@ def get_scaling_law_lnd_fit_single_plot(
 
     def _get_marker_legend_elements():
         legend_elements = []
-        legend_elements.append(
-            Patch(color="none", label=" "*16)
-        )
+        legend_elements.append(Patch(color="none", label=" " * 16))
         for model_tag, style in data_points_style_dict.items():
             legend_elements.append(
                 plt.Line2D(
@@ -191,16 +189,20 @@ def get_scaling_law_lnd_fit_single_plot(
     )
 
     if add_header:
-        for text, offset in zip([
-            r"$\mathbf{Model \ Sizes}$",
-            r"$\mathbf{Empirical \ Data}$",
-            r"$\mathbf{L(N,D) \ Fits}$",
-        ], [0.0, 0.395, 0.57]):
+        for text, offset in zip(
+            [
+                r"$\mathbf{Model \ Sizes}$",
+                r"$\mathbf{Empirical \ Data}$",
+                r"$\mathbf{L(N,D) \ Fits}$",
+            ],
+            [0.0, 0.395, 0.57],
+        ):
             fig.text(
-                0.932, #0.979, #
+                0.932,  # 0.979, #
                 0.87 - offset,
                 text,
-                ha='left', va='top',
+                ha="left",
+                va="top",
                 fontsize=11,
                 zorder=99,
             )

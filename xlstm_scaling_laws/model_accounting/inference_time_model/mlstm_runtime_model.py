@@ -115,9 +115,9 @@ def predict_runtime_mlstm_ttft(
     add_suffix_to_col: bool = False,
     # algorithm args
     factor_causal: float = 0.75,
-    bytes_act: int = 2, # bfloat16
-    bytes_Cmn: int = 4, # float32
-    bytes_w: int = 2, # bfloat16
+    bytes_act: int = 2,  # bfloat16
+    bytes_Cmn: int = 4,  # float32
+    bytes_w: int = 2,  # bfloat16
 ) -> pd.DataFrame:
     """Predict the time to first token (TTFT) for mLSTM model configurations in milliseconds."""
 
@@ -126,7 +126,6 @@ def predict_runtime_mlstm_ttft(
         suffix = f"_r{rho}-a{alpha:.3e}-b{beta:.3e}-{smode}"
     else:
         suffix = ""
-
 
     def _apply_runtime_model(row: pd.Series) -> float:
         """Apply the runtime model to a single row of the DataFrame."""
@@ -160,7 +159,7 @@ def predict_runtime_mlstm_ttft(
         )
         # convert to milliseconds
         if "log_" in mode:
-            predicted_runtime_msecs = ret.pop("runtime")  + np.log(np.array(1000.0))
+            predicted_runtime_msecs = ret.pop("runtime") + np.log(np.array(1000.0))
         else:
             predicted_runtime_msecs = ret.pop("runtime") * np.array(1000.0)
         row[(f"pred{suffix}", "runtime")] = predicted_runtime_msecs
@@ -171,6 +170,7 @@ def predict_runtime_mlstm_ttft(
     pred_ttft_df = ttft_df.apply(_apply_runtime_model, axis=1)
 
     return pred_ttft_df
+
 
 def runtime_model_mlstm_step_time(
     # input args
@@ -276,9 +276,9 @@ def predict_runtime_mlstm_step_time(
     add_suffix_to_col: bool = False,
     # algorithm args
     factor_causal: float = 0.75,
-    bytes_act: int = 2, # bfloat16
-    bytes_Cmn: int = 4, # float32
-    bytes_w: int = 2, # bfloat16
+    bytes_act: int = 2,  # bfloat16
+    bytes_Cmn: int = 4,  # float32
+    bytes_w: int = 2,  # bfloat16
 ) -> pd.DataFrame:
     """Predict the step time for mLSTM model configurations in milliseconds."""
 
@@ -287,7 +287,6 @@ def predict_runtime_mlstm_step_time(
         suffix = f"_r{rho}-a{alpha:.3e}-b{beta:.3e}-{smode}"
     else:
         suffix = ""
-
 
     def _apply_runtime_model(row: pd.Series) -> float:
         """Apply the runtime model to a single row of the DataFrame."""
@@ -320,7 +319,7 @@ def predict_runtime_mlstm_step_time(
         )
         # convert to milliseconds
         if "log_" in mode:
-            predicted_runtime_msecs = ret.pop("runtime")  + np.log(np.array(1000.0))
+            predicted_runtime_msecs = ret.pop("runtime") + np.log(np.array(1000.0))
         else:
             predicted_runtime_msecs = ret.pop("runtime") * np.array(1000.0)
         row[(f"pred{suffix}", "runtime")] = predicted_runtime_msecs

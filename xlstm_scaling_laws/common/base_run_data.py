@@ -1,9 +1,10 @@
-import logging
 import json
+import logging
 import traceback
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Literal, Type
+
 import pandas as pd
 
 from ..flops.count_flops import (
@@ -38,7 +39,7 @@ class BaseRunData:
     name: str
     run_tag: str | None
     run_id: str
-    """Unique run_id. This is the concatenation of the ids of the individual runs that are combined into this RunData object. 
+    """Unique run_id. This is the concatenation of the ids of the individual runs that are combined into this RunData object.
     If only a single run is used, then this is just the id of that run.
     Format: id1-id2-...-idN
     """
@@ -252,9 +253,9 @@ class BaseRunData:
         for log_key in log_keys:
             key_logs = []
             for run in wandb_runs:
-                assert (
-                    log_key in run.logs
-                ), f"Log key '{log_key}' not found in run '{run.name}'"
+                assert log_key in run.logs, (
+                    f"Log key '{log_key}' not found in run '{run.name}'"
+                )
                 key_logs.append(run.logs[log_key])
 
             log_df = pd.concat(key_logs).reset_index(level=0, drop=True)
@@ -364,7 +365,7 @@ class BaseRunData:
 
 def convert_to_run_data(
     wandb_run_data_runs: list[WandBRunData],
-    run_data_class: Type[BaseRunData],
+    run_data_class: type[BaseRunData],
     run_tag: str | None = None,
     config_calc_run_data: RunDataCalcConfig = None,
     group_runs_by: Literal["none", "name"] = True,
@@ -415,7 +416,7 @@ def convert_to_run_data(
 
 def convert_to_run_data_dict(
     wandb_run_data_dict: dict[str, list[WandBRunData]],
-    run_data_class: Type[BaseRunData],
+    run_data_class: type[BaseRunData],
     config_calc_run_data: RunDataCalcConfig = None,
     group_runs_by: Literal["none", "name"] = True,
 ) -> dict[str, list[BaseRunData]]:

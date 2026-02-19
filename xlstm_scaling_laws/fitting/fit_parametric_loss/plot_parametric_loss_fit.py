@@ -9,8 +9,9 @@ as reference for the plot (https://arxiv.org/abs/2401.00448).
 """
 
 import copy
+from collections.abc import Callable
 from itertools import cycle
-from typing import Callable, Literal
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -329,7 +330,9 @@ def plot_parametric_loss_fit(
     ),  # level 1: mlstm / llama, level 2: model size config
     param_fit_sclaw_data_df_dict: dict[
         str, pd.DataFrame
-    ] = get_param_fit_sclaw_data_df_dict(context_length=8192, experiment_set="tokenparam"),
+    ] = get_param_fit_sclaw_data_df_dict(
+        context_length=8192, experiment_set="tokenparam"
+    ),
     param_fit_sclaw_data_num_param_selection: dict[str, list[float]] | None = {
         "mlstm": [
             164110224.0,
@@ -353,7 +356,14 @@ def plot_parametric_loss_fit(
     },
     num_points: int = 250,
     token_param_ratio_range: tuple[float, float] = (11.0, 2500.0),
-    sclaw_func_linestyles: list[str] = ["solid", "dashed", "dotted", "dashdot", (0, (1, 10)), (0, (3, 5, 1, 5, 1, 5))],
+    sclaw_func_linestyles: list[str] = [
+        "solid",
+        "dashed",
+        "dotted",
+        "dashdot",
+        (0, (1, 10)),
+        (0, (3, 5, 1, 5, 1, 5)),
+    ],
     model_size_colormap: Callable | None = None,
     model_size_colormap_scale: Literal[
         "linear", "log"
