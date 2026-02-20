@@ -2,7 +2,7 @@
 
 <img src="./res/plot_lnd_pareto_combined_llama_mlstm.svg" width="800px" alt="xLSTM Scaling Laws Figure 1">
 
->Paper: [http://arxiv.org/abs/2510.02228](http://arxiv.org/abs/2510.02228)
+>Paper: [http://arxiv.org/abs/2510.02228](http://arxiv.org/abs/2510.02228) (Accepted at ICLR 2026)
 >
 >Authors: Maximilian Beck, Kajetan Schweighofer, Sebastian Böck, Sebastian Lehner, Sepp Hochreiter
 
