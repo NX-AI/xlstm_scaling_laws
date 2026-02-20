@@ -14,6 +14,7 @@ class ParamCountConfig:
     count_final_logits_params: bool = True
     """Wether to count the parameters of the final logits layer."""
 
+
 def count_model_params(
     model_type: str,
     model_kwargs: dict[str, Any],
@@ -39,5 +40,5 @@ def get_ffn_dim(model_type: str, model_kwargs: dict[str, Any]) -> int:
         from .llama import get_ffn_dim
     else:
         raise ValueError(f"model_type: {model_type} not supported!")
-    
+
     return get_ffn_dim(model_kwargs=model_kwargs)

@@ -20,17 +20,17 @@ def plot_lnd_pareto_combined(
     experiment_set_fit="tokenparam",
     x_axis_mode="num_flops",
     figsize: tuple[float, float] = (10, 4),
-    model_tags_label_map = {
+    model_tags_label_map={
         "llama": "Transformer",
         "mlstm": "xLSTM",
     },
-    data_points_style_dict = {
+    data_points_style_dict={
         "llama": {"marker": "x"},
         "mlstm": {"marker": "o"},
     },
-    fit_linestyles=["dashed", "solid"]
+    fit_linestyles=["dashed", "solid"],
 ):
-    
+
     fig, axs = plt.subplots(1, 2, figsize=figsize)
 
     # Plot Pareto Frontier
@@ -39,8 +39,8 @@ def plot_lnd_pareto_combined(
         experiment_set_fit=experiment_set_fit,
         experiment_set_plot_data_points=experiment_set_plot_data_points,
         x_axis_mode=x_axis_mode,
-        model_tags_label_map = model_tags_label_map,
-        data_points_style_dict = data_points_style_dict,
+        model_tags_label_map=model_tags_label_map,
+        data_points_style_dict=data_points_style_dict,
         fig=fig,
         ax=axs[0],
     )
@@ -52,25 +52,29 @@ def plot_lnd_pareto_combined(
         experiment_set_plot_data_points=experiment_set_plot_data_points,
         datapoints_num_param_selection=None,
         x_axis_mode=x_axis_mode,
-        model_tags_label_map = model_tags_label_map,
-        data_points_style_dict = data_points_style_dict,
+        model_tags_label_map=model_tags_label_map,
+        data_points_style_dict=data_points_style_dict,
         fig=fig,
         ax=axs[1],
-        add_header=False
+        add_header=False,
     )
 
-    for text, offset in zip([
+    for text, offset in zip(
+        [
             r"$\mathbf{Model \ Sizes}$",
             r"$\mathbf{Empirical \ Data}$",
             r"$\mathbf{L(N,D) \ Fits}$",
-        ], [0.0, 0.395, 0.57]):
-            fig.text(
-                0.920, #0.979, #
-                0.87 - offset,
-                text,
-                ha='left', va='top',
-                fontsize=11,
-                zorder=99,
-            )
-    
+        ],
+        [0.0, 0.395, 0.57],
+    ):
+        fig.text(
+            0.920,  # 0.979, #
+            0.87 - offset,
+            text,
+            ha="left",
+            va="top",
+            fontsize=11,
+            zorder=99,
+        )
+
     return fig

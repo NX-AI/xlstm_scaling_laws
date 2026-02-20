@@ -9,8 +9,9 @@ Collects the results of the optimization and returns them in a pandas DataFrame.
 """
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Literal, Optional
+from typing import Any, Literal, Optional
 
 import numpy as np
 import pandas as pd
@@ -37,7 +38,7 @@ class OptimizationConfig:
     """The grid of initialization values to be used for the optimization."""
 
     num_bootstrap_samples: int = -1
-    """The number of bootstrap samples to be used for the optimization. 
+    """The number of bootstrap samples to be used for the optimization.
     Default is -1, which means no bootstrapping."""
     bootstrap_seed: int = 1
     """The seed to be used to generate the seeds each for bootstrapping sample. Default is 1."""
@@ -58,7 +59,7 @@ class OptimizationConfig:
 def run_optimization(
     config: OptimizationConfig,
     objective_func_generator: Callable[
-        [ObjFuncConfig, Optional[int]], tuple[Callable, pd.DataFrame]
+        [ObjFuncConfig, int | None], tuple[Callable, pd.DataFrame]
     ],
     validation_func_generator: Callable[
         [ObjFuncConfig, ValFuncConfig], Callable

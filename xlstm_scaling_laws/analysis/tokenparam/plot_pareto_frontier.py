@@ -1,4 +1,5 @@
-from typing import Callable, Literal
+from collections.abc import Callable
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,8 +25,10 @@ def convex_hull(points):
     sorted_order = np.lexsort((pts[:, 1], pts[:, 0]))
     pts = pts[sorted_order]
     indices = indices[sorted_order]
+
     def cross(o, a, b):
-        return (a[0]-o[0])*(b[1]-o[1]) - (a[1]-o[1])*(b[0]-o[0])
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
     lower, lower_idx = [], []
     for i, p in zip(indices, pts):
         while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
@@ -74,7 +77,7 @@ def get_pareto_frontier_single_plot(
     },
     model_configs: dict[str, pd.DataFrame] = get_model_config_df_dict(
         context_length=8192
-    ), 
+    ),
     hull_colors: dict[str, str] = {
         "llama": "C3",
         "mlstm": "C0",
@@ -163,7 +166,7 @@ def get_pareto_frontier_single_plot(
     #     )
     #     parametric_loss_fn_dicts[model_tag] = model_func_dict
 
-    param_fit_sclaw_data_df_dict=get_param_fit_sclaw_data_df_dict(
+    param_fit_sclaw_data_df_dict = get_param_fit_sclaw_data_df_dict(
         context_length=8192, experiment_set=experiment_set_plot_data_points
     )
 
@@ -196,9 +199,7 @@ def get_pareto_frontier_single_plot(
         #     continue
         # select data points with correct num_params
         model_df = model_df[
-            model_df["num_params"].isin(
-                datapoints_num_param_selection[model_type_key]
-            )
+            model_df["num_params"].isin(datapoints_num_param_selection[model_type_key])
         ]
 
         ax.scatter(
@@ -211,13 +212,15 @@ def get_pareto_frontier_single_plot(
             alpha=0.25,
         )
 
-
-        points = np.array(
-            model_df[[x_axis_mode_to_x_col[x_axis_mode], y_col]].values
-        )
+        points = np.array(model_df[[x_axis_mode_to_x_col[x_axis_mode], y_col]].values)
 
         # append minimum of both axes to close the polygon and remove at the end
-        points = np.vstack([points,np.array([points[:, 0].max(), points[:, 1].max()]),])
+        points = np.vstack(
+            [
+                points,
+                np.array([points[:, 0].max(), points[:, 1].max()]),
+            ]
+        )
         pareto_points = convex_hull(points)[0][:-1]
         ax.plot(
             pareto_points[:, 0],
@@ -229,7 +232,7 @@ def get_pareto_frontier_single_plot(
         )
 
         fill_points = np.vstack(
-            [   
+            [
                 np.array([pareto_points[0, 0], ylim[x_axis_mode][1]]),
                 pareto_points,
                 np.array([xlim[x_axis_mode][1], pareto_points[-1, 1]]),
@@ -245,43 +248,49 @@ def get_pareto_frontier_single_plot(
         )
 
     ax.arrow(
-        0.10, 0.43,          
-        0.00, -0.20,          
+        0.10,
+        0.43,
+        0.00,
+        -0.20,
         transform=ax.transAxes,
         length_includes_head=True,
-        head_width=0.015,    
-        head_length=0.03,    
+        head_width=0.015,
+        head_length=0.03,
         fc="black",
         ec="black",
         lw=2,
     )
     ax.text(
-        0.10, 0.45,          
+        0.10,
+        0.45,
         "Better",
         transform=ax.transAxes,
-        va="bottom",         
-        ha="center",           
+        va="bottom",
+        ha="center",
         fontsize=12,
         color="black",
     )
 
     ax.arrow(
-        0.40, 0.13,          
-        -0.20, 0.00,          
+        0.40,
+        0.13,
+        -0.20,
+        0.00,
         transform=ax.transAxes,
         length_includes_head=True,
-        head_width=0.015,    
-        head_length=0.03,    
+        head_width=0.015,
+        head_length=0.03,
         fc="black",
         ec="black",
         lw=2,
     )
     ax.text(
-        0.42, 0.13,          
+        0.42,
+        0.13,
         "Cheaper",
         transform=ax.transAxes,
-        va="center",         
-        ha="left",           
+        va="center",
+        ha="left",
         fontsize=12,
         color="black",
     )
@@ -308,7 +317,7 @@ def get_pareto_frontier_single_plot(
         ax.set_xlim(xlim[x_axis_mode])
     if ylim is not None:
         ax.set_ylim(ylim[x_axis_mode])
-    
+
     ax.grid(which="minor", linestyle="-", linewidth=0.5, color="lightgrey")
     if legend_kwargs is not None:
         ax.legend(

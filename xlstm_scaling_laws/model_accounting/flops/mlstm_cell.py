@@ -130,6 +130,7 @@ fn_flop_par_exp = sp.lambdify(
     (T, n_headq, d_qk, d_hv, F_causal), simpl_flop_par_exp_total, modules=["numpy"]
 )
 
+
 def count_flops_mlstmexp_recurrent(seq_len, n_headq, d_qk, d_hv, **kwargs):
     return fn_flop_rec_exp(seq_len, n_headq, d_qk, d_hv)
 
@@ -140,5 +141,7 @@ def count_flops_mlstmexp_chunkwise_parallel(
     return fn_flop_cwp_exp(seq_len, n_headq, d_qk, d_hv, factor_causal, chunk_size)
 
 
-def count_flops_mlstmexp_parallel(seq_len, n_headq, d_qk, d_hv, factor_causal, **kwargs):
+def count_flops_mlstmexp_parallel(
+    seq_len, n_headq, d_qk, d_hv, factor_causal, **kwargs
+):
     return fn_flop_par_exp(seq_len, n_headq, d_qk, d_hv, factor_causal)

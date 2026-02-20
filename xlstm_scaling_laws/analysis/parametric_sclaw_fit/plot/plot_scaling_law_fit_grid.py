@@ -42,8 +42,8 @@ def get_scaling_law_fit_grid_plot(
 ) -> Figure:
     """Compare xLSTM and Llama scaling law fits (columns)
     on different experiement sets (all, tokenparam, isoflop) in different rows.
-    
-    Vary the token param range for each experiment set and model.    
+
+    Vary the token param range for each experiment set and model.
     """
     nrows = len(experiment_sets)
     ncols = 2
@@ -205,9 +205,9 @@ def get_scaling_law_fit_func_comparison_plot(
 ) -> Figure:
     """Compare xLSTM and Llama scaling law fits (columns)
     on different experiement sets (token param range, isoflop) in different rows.
-    
+
     Vary the scaling law fit function for each experiment set and model.
-    Compare chinchilla fit with and without the gamma parameter.    
+    Compare chinchilla fit with and without the gamma parameter.
     """
     nrows = len(experiment_sets)
     ncols = 2
@@ -223,9 +223,10 @@ def get_scaling_law_fit_func_comparison_plot(
 
     for i, model_tag in enumerate(model_tags):
         for j, experiment_set in enumerate(experiment_sets):
-
             gamma_fit_dfs = {
-                gamma_key: combined_fit_grid_gamma_dict_df[gamma_key].loc[model_tag, experiment_set, token_param_range]
+                gamma_key: combined_fit_grid_gamma_dict_df[gamma_key].loc[
+                    model_tag, experiment_set, token_param_range
+                ]
                 for gamma_key in gamma_label_map.keys()
             }
 

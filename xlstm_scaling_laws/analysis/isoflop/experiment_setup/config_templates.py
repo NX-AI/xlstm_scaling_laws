@@ -188,7 +188,7 @@ hydra:
       num_train_steps: SSSS
 """
 
-config_template_str_llama = """ 
+config_template_str_llama = """
 # @package _global_
 defaults:
   - /data@data_train.ds1: dclm_arrayrecord_train

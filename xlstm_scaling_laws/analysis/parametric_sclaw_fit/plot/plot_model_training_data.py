@@ -312,21 +312,21 @@ def get_combined_run_data_scatter_plot(
             if legend_label in style_tags_legend:
                 if legend_label.split("_")[0] != current_label:
                     if current_label is not None:
-                        legend_handles.extend([Patch(color="none")]*2)
-                        legend_labels.extend([" "]*2)
+                        legend_handles.extend([Patch(color="none")] * 2)
+                        legend_labels.extend([" "] * 2)
                     current_label = legend_label.split("_")[0]
                 legend_handles.append(legend_handle)
                 legend_labels.append(style_tags_legend[legend_label].split(" ")[1])
 
         fig.legend(
-            handles=legend_handles, 
+            handles=legend_handles,
             labels=legend_labels,
             loc="center right",
             bbox_to_anchor=(1.08, 0.5),
             frameon=True,
             facecolor="white",
             fontsize=12,
-            markerscale=1.5
+            markerscale=1.5,
         )
 
         # add text
@@ -337,7 +337,8 @@ def get_combined_run_data_scatter_plot(
             ha="center",
             va="center",
             fontsize=12,
-            zorder=99,)
+            zorder=99,
+        )
         fig.text(
             1.012,
             0.335,
@@ -345,6 +346,7 @@ def get_combined_run_data_scatter_plot(
             ha="center",
             va="center",
             fontsize=12,
-            zorder=99,)
+            zorder=99,
+        )
 
     return fig

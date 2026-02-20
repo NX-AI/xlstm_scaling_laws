@@ -156,7 +156,7 @@ def calculate_num_train_steps_per_isoflop(
             )
             num_nodes = model_kwargs["num_nodes"]
             batch_size_per_device = model_kwargs["batch_size_per_device"]
-            
+
             global_batch_size_for_model = global_batch_size_override
             # find the global batch size override factor
             gbs_model_kwargs = model_kwargs["global_batch_size"]
@@ -319,7 +319,7 @@ def generate_iso_configs_mlstm(
         model_name = model_name_template.format(sizename=row["index"].split("_")[1])
         config = config.replace("MMMM", model_name)
 
-        nsteps = row.filter(regex="e\+").array.astype(float)
+        nsteps = row.filter(regex=r"e\+").array.astype(float)
         nsteps_rounded = (
             str(
                 (np.round(nsteps / valevery_steps) * valevery_steps)
@@ -377,7 +377,7 @@ def generate_iso_configs_mlstm_ctx(
         model_name = model_name_template.format(sizename=row["index"].split("_")[1])
         config = config.replace("MMMM", model_name)
 
-        nsteps = row.filter(regex="e\+").array.astype(float)
+        nsteps = row.filter(regex=r"e\+").array.astype(float)
         nsteps_rounded = (
             str(
                 (np.round(nsteps / valevery_steps) * valevery_steps)
@@ -436,7 +436,7 @@ def generate_iso_configs_llama(
         model_name = model_name_template.format(sizename=row["index"].split("_")[1])
         config = config.replace("MMMM", model_name)
 
-        nsteps = row.filter(regex="e\+").array.astype(float)
+        nsteps = row.filter(regex=r"e\+").array.astype(float)
         nsteps_rounded = (
             str(
                 (np.round(nsteps / valevery_steps) * valevery_steps)

@@ -8,11 +8,45 @@ from .common.wandb_run_data import WandBRunData
 
 LOGGER = logging.getLogger(__name__)
 
+
 @dataclass
 class RunData(BaseRunData):
-
     def __repr__(self) -> str:
         return super().__repr__()
+
+    @property
+    def model_checkpoint_paths(self) -> list[str]:
+        """Returns the model checkpoint paths for the run.
+        It is a list, because there can be multiple checkpoints for a run (e.g., if the run was resumed from a previous checkpoint).
+
+        The paths returned are the paths to the wandb root directory, which has been stored in the run directory.
+        To get the full path to the checkpoint, you need to know how the checkpoints are stored in the run directory. For example, if the checkpoints are stored in a subdirectory called "checkpoints" and the checkpoint files are named "checkpoint_{step}", then the full path to the checkpoint would be:
+
+        Returned model checkpoint paths:
+        ['/nfs-gpu/xlstm/outputs_beck/sclaw/dclm_mLSTMv1_1.4B_ctx8192_lr0.0007_steps746000_2024-12-21T11:53:25/0/wandb']
+
+        Full path to checkpoint:
+        `/nfs-gpu/users_work/beck/xlstm_sclaw_ckpt_selected/dclm_mLSTMv1_1.4B_ctx8192_lr0.0007_steps746000_2024-12-21T11:53:25/0/checkpoints/checkpoint_746000`
+
+        Content of the checkpoint directory:
+        (base) [beck@gpu-prd-controller checkpoint_746000]$ du -h
+        5.0G    ./params/ocdbt.process_0/d
+        5.0G    ./params/ocdbt.process_0
+        8.5K    ./params/d
+        5.0G    ./params
+        9.6G    ./opt_state/ocdbt.process_0/d
+        9.6G    ./opt_state/ocdbt.process_0
+        8.5K    ./opt_state/d
+        9.6G    ./opt_state
+        17K     ./rng/checkpoint
+        25K     ./rng
+        8.5K    ./metadata
+        17K     ./step/checkpoint
+        25K     ./step
+        8.5K    ./metrics
+        15G     .
+        """
+        return [wbrun.metadata["root"] for wbrun in self._raw_data]
 
     @classmethod
     def create_run_data_from_wandb_run_data(
@@ -26,7 +60,6 @@ class RunData(BaseRunData):
             run_tag=run_tag,
             config_calc_run_data=config_calc_run_data,
         )
-
 
 
 # Note: Replace this function with another one, if you change the Config in the WandBRunData class.
@@ -47,10 +80,8 @@ def create_run_data_from_wandb_run_data(
             )
         except IndexError:
             LOGGER.warning(
-                (
-                    f"Could not extract chunk size from backend kwargs '{backend_kwargs_str}' from run {raw_run_data}."
-                    "Using default chunk size of 64."
-                )
+                f"Could not extract chunk size from backend kwargs '{backend_kwargs_str}' from run {raw_run_data}."
+                "Using default chunk size of 64."
             )
             chunk_size_str = "64"
         return int(chunk_size_str)
@@ -128,14 +159,19 @@ def create_run_data_from_wandb_run_data(
         else:
             lr = float(lr_str.split(",")[0].split(":")[1].strip())
         return lr
-    
+
     def get_warmup_steps() -> int:
         wu_str = raw_run_data.config.get("optimizer.scheduler", None)
         if wu_str is None:
             LOGGER.warning("Could not extract learning rate, setting to NaN")
             wu = -1
         else:
-            wu = wu_str[wu_str.find("warmup_steps"):].split(",")[0].split(":")[1].strip()
+            wu = (
+                wu_str[wu_str.find("warmup_steps") :]
+                .split(",")[0]
+                .split(":")[1]
+                .strip()
+            )
             wu = int(wu)
         return wu
 
@@ -149,6 +185,7 @@ def create_run_data_from_wandb_run_data(
         run_data = RunData(
             name=raw_run_data.name,
             run_tag=run_tag,
+            run_id=raw_run_data.id,
             model_type=model_type,
             learning_rate=get_learning_rate(),
             num_lr_warmup_steps=get_warmup_steps(),
@@ -167,6 +204,7 @@ def create_run_data_from_wandb_run_data(
         run_data = RunData(
             name=raw_run_data.name,
             run_tag=run_tag,
+            run_id=raw_run_data.id,
             model_type=model_type,
             learning_rate=get_learning_rate(),
             model_kwargs=model_kwargs,

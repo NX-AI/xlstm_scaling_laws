@@ -122,12 +122,12 @@ def get_isoflop_ctx_plot(
 
     def _get_isoflop_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
-            Patch(color="none", label=r'$\mathbf{Compute}$'),
+            Patch(color="none", label=r"$\mathbf{Compute}$"),
         ]
         # extract the unique isoflop tags from the legend labels
-        isoflop_tags = set(
+        isoflop_tags = {
             float(label.split("_")[1]) for label in legend_label_handle_map.keys()
-        )
+        }
         isoflop_tags = sorted(isoflop_tags)
         # extract the colors for each isoflop tag
         for isoflop in isoflop_tags:
@@ -139,12 +139,12 @@ def get_isoflop_ctx_plot(
 
     def _get_datapoint_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
-            Patch(color="none", label=r'$\mathbf{Training \ Runs}$'),
+            Patch(color="none", label=r"$\mathbf{Training \ Runs}$"),
         ]
         # extract the unique model tags from the legend labels
-        model_tags = set(
+        model_tags = {
             "_".join(label.split("_")[2:]) for label in legend_label_handle_map.keys()
-        )
+        }
         model_tags = sorted(model_tags)
         # extract the colors for each model tag
         for model_tag in model_tags:
@@ -168,12 +168,12 @@ def get_isoflop_ctx_plot(
 
     def _get_optima_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
-            Patch(color="none", label=r'$\mathbf{FLOP \ Optima}$'),
+            Patch(color="none", label=r"$\mathbf{FLOP \ Optima}$"),
         ]
         # extract the unique model tags from the legend labels
-        model_tags = set(
+        model_tags = {
             "_".join(label.split("_")[2:]) for label in legend_label_handle_map.keys()
-        )
+        }
         model_tags = sorted(model_tags)
         # extract the colors for each model tag
         for model_tag in model_tags:
@@ -305,7 +305,8 @@ def get_isoflop_powerlaw_ctx_plot(
             ),
         )
         ax.set_title(
-            f"Context Length {context_length}", color=fit_ctx_color_dict[context_length]["color"]
+            f"Context Length {context_length}",
+            color=fit_ctx_color_dict[context_length]["color"],
         )
         return ax
 
@@ -339,7 +340,10 @@ def get_isoflop_powerlaw_ctx_plot(
         ytick_labels=ytick_labels_powerlaw_plot[x_col],
         legend_kwargs=legend_kwargs_powerlaw_plot,
         y_axis_labelpad=y_axis_labelpad_powerlaw_plot[x_col],
-        flop_range_for_powerlaw_fit=(5e18, 5e19), # only use the flop budgets 6e18, 1e19, 3e19
+        flop_range_for_powerlaw_fit=(
+            5e18,
+            5e19,
+        ),  # only use the flop budgets 6e18, 1e19, 3e19
     )
     ax_powerlaw.tick_params(axis="y", pad=-3.0)
 
@@ -373,12 +377,12 @@ def get_isoflop_powerlaw_ctx_plot(
     def _get_isoflop_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
             # Patch(color="none", label="$\mathbf{Compute}$"),
-            Patch(color="none", label=" "*17),
+            Patch(color="none", label=" " * 17),
         ]
         # extract the unique isoflop tags from the legend labels
-        isoflop_tags = set(
+        isoflop_tags = {
             float(label.split("_")[1]) for label in legend_label_handle_map.keys()
-        )
+        }
         isoflop_tags = sorted(isoflop_tags)
         # extract the colors for each isoflop tag
         for isoflop in isoflop_tags:
@@ -391,12 +395,12 @@ def get_isoflop_powerlaw_ctx_plot(
     def _get_datapoint_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
             # Patch(color="none", label="$\mathbf{Training\ Runs}$"),
-            Patch(color="none", label=" "*17),
+            Patch(color="none", label=" " * 17),
         ]
         # extract the unique model tags from the legend labels
-        model_tags = set(
+        model_tags = {
             "_".join(label.split("_")[2:]) for label in legend_label_handle_map.keys()
-        )
+        }
         model_tags = sorted(model_tags)
         # extract the colors for each model tag
         for model_tag in model_tags:
@@ -421,12 +425,12 @@ def get_isoflop_powerlaw_ctx_plot(
     def _get_optima_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
             # Patch(color="none", label=r"$\mathbf{FLOP\ Optima}$"),
-            Patch(color="none", label=" "*17),
+            Patch(color="none", label=" " * 17),
         ]
         # extract the unique model tags from the legend labels
-        model_tags = set(
+        model_tags = {
             "_".join(label.split("_")[2:]) for label in legend_label_handle_map.keys()
-        )
+        }
         model_tags = sorted(model_tags)
         # extract the colors for each model tag
         for model_tag in model_tags:
@@ -459,32 +463,42 @@ def get_isoflop_powerlaw_ctx_plot(
     # _get_isoflop_legend_elements(legend_label_handle_map)
 
     # _get_datapoint_legend_elements(legend_label_handle_map)
-    
+
     ### Look and feel of a singular legend
 
-    rect = FancyBboxPatch((0.09, 1.01), 0.81, 0.40,
-                         transform=fig.transFigure,
-                         boxstyle="round,pad=0.0,rounding_size=0.004",
-                         facecolor='none',
-                         edgecolor='lightgrey',
-                         mutation_aspect=5,
-                         linewidth=0.8)
+    rect = FancyBboxPatch(
+        (0.09, 1.01),
+        0.81,
+        0.40,
+        transform=fig.transFigure,
+        boxstyle="round,pad=0.0,rounding_size=0.004",
+        facecolor="none",
+        edgecolor="lightgrey",
+        mutation_aspect=5,
+        linewidth=0.8,
+    )
     fig.patches.append(rect)
 
     fig.legend(handles=legend_elements, **legend_kwargs)
 
-    for text, offset in zip([
-        r"$\mathbf{Compute}$",
-        r"$\mathbf{Training\ Runs}$",
-        r"$\mathbf{FLOP\ Optima}$",
-    ], [0.0, 0.093, 0.208]):
-        fig.text(
-            0.103 + offset, 1.37,
-            text,
-            ha='left', va='top',
-            fontsize=16
-        )
+    for text, offset in zip(
+        [
+            r"$\mathbf{Compute}$",
+            r"$\mathbf{Training\ Runs}$",
+            r"$\mathbf{FLOP\ Optima}$",
+        ],
+        [0.0, 0.093, 0.208],
+    ):
+        fig.text(0.103 + offset, 1.37, text, ha="left", va="top", fontsize=16)
 
-    fig.lines.append(Line2D([0.41]*2, [1.045, 1.37], transform=fig.transFigure, color='lightgrey', linewidth=0.8))
+    fig.lines.append(
+        Line2D(
+            [0.41] * 2,
+            [1.045, 1.37],
+            transform=fig.transFigure,
+            color="lightgrey",
+            linewidth=0.8,
+        )
+    )
 
     return fig

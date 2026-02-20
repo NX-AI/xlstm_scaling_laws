@@ -46,28 +46,28 @@ def get_default_run_data_calc_config(
 
 def load_run_data(
     wandb_run_data_dict_file: Path | dict,
-    run_data_class: Type[BaseRunData],
+    run_data_class: type[BaseRunData],
     group_runs_by: str = "name",
     config_calc_run_data: RunDataCalcConfig = get_default_run_data_calc_config(
         attention_flop_calc_mode="chinchilla",
         mlstm_fw_flop_calc_mode="first",
     ),
 ) -> dict[str, list[BaseRunData]]:
-    
+
     class ModuleRenameUnpickler(pickle.Unpickler):
         def find_class(self, module, name):
             # Map old module names to new module names
             module_mapping = {
-                'mlstm_scaling_laws': 'xlstm_scaling_laws',
+                "mlstm_scaling_laws": "xlstm_scaling_laws",
                 # Add other specific mappings here
             }
-            
+
             # Handle nested module paths
             for old_prefix, new_prefix in module_mapping.items():
                 if module.startswith(old_prefix):
                     module = module.replace(old_prefix, new_prefix, 1)
                     break
-                
+
             return super().find_class(module, name)
 
     if isinstance(wandb_run_data_dict_file, Path):
@@ -91,7 +91,7 @@ def load_run_data(
 
 def load_run_summary_table(
     wandb_run_data_dict_file: Path | dict,
-    run_data_class: Type[BaseRunData],
+    run_data_class: type[BaseRunData],
     config_calc_run_data: RunDataCalcConfig = get_default_run_data_calc_config(
         attention_flop_calc_mode="chinchilla",
         mlstm_fw_flop_calc_mode="first",

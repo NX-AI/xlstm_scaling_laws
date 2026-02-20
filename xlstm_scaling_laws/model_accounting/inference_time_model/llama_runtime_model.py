@@ -43,7 +43,7 @@ def runtime_model_llama_ttft(
     mode: str = "attainable_flops_logsumexp",
 ) -> dict:
     """Predict the time to first token (TTFT) for a given Llama model configuration in seconds."""
-    
+
     runtime_model = get_runtime_model(mode)
     count_args = {}
     input_args = {
@@ -124,8 +124,7 @@ def runtime_model_llama_step_time(
     # runtime model mode
     mode: str = "attainable_flops_logsumexp",
 ) -> dict:
-    """Predict the average step time for a given Llama configuration in seconds.
-    """
+    """Predict the average step time for a given Llama configuration in seconds."""
     runtime_model = get_runtime_model(mode)
 
     assert embedding_dim / n_headq == d_hv, "d_hv must be embedding_dim / n_headq"
@@ -195,23 +194,24 @@ def predict_runtime_llama_ttft(
     mode: str = "attainable_flops_logsumexp",
     add_suffix_to_col: bool = False,
     # algorithm args
-    bytes_act: int = 2, # bfloat16
-    bytes_w: int = 2, # bfloat16
+    bytes_act: int = 2,  # bfloat16
+    bytes_w: int = 2,  # bfloat16
 ) -> pd.DataFrame:
     """Predict the time to first token (TTFT) for Llama model configuration in milliseconds."""
-    
+
     if add_suffix_to_col:
         smode = "".join([w[0] for w in mode.split("_")])
         suffix = f"_r{rho}-a{alpha:.3e}-b{beta:.3e}-{smode}"
     else:
         suffix = ""
 
-
     def _apply_runtime_model(row: pd.Series) -> float:
         """Apply the runtime model to a single row of the DataFrame."""
 
         # We already hardcode MHA (e.g. n_headq = n_headkv) in the model params
-        head_dim = row[("model_params", "embedding_dim")] / row[("model_params", "num_heads")]
+        head_dim = (
+            row[("model_params", "embedding_dim")] / row[("model_params", "num_heads")]
+        )
 
         ret = runtime_model_llama_ttft(
             batchsize=row[("input_params", "batchsize")],
@@ -253,6 +253,7 @@ def predict_runtime_llama_ttft(
 
     return pred_ttft_df
 
+
 def predict_runtime_llama_step_time(
     step_time_df: pd.DataFrame,
     # runtime model args
@@ -270,8 +271,8 @@ def predict_runtime_llama_step_time(
     mode: str = "attainable_flops_logsumexp",
     add_suffix_to_col: bool = False,
     # algorithm args
-    bytes_act: int = 2, # bfloat16
-    bytes_w: int = 2, # bfloat16
+    bytes_act: int = 2,  # bfloat16
+    bytes_w: int = 2,  # bfloat16
 ) -> pd.DataFrame:
     """Predict the step time for Llama model configurations in milliseconds."""
 
@@ -281,17 +282,17 @@ def predict_runtime_llama_step_time(
     else:
         suffix = ""
 
-    
-
     def _apply_runtime_model(row: pd.Series) -> float:
         """Apply the runtime model to a single row of the DataFrame."""
 
-        head_dim = row[("model_params", "embedding_dim")] / row[("model_params", "num_heads")]
+        head_dim = (
+            row[("model_params", "embedding_dim")] / row[("model_params", "num_heads")]
+        )
 
         ret = runtime_model_llama_step_time(
             batchsize=row[("input_params", "batchsize")],
             seq_len_pre=row[("input_params", "prefill")],
-            seq_len_gen=100, # assume that prefill dominates
+            seq_len_gen=100,  # assume that prefill dominates
             embedding_dim=row[("model_params", "embedding_dim")],
             num_blocks=row[("model_params", "num_blocks")],
             n_headq=row[("model_params", "num_heads")],

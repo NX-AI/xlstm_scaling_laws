@@ -39,6 +39,7 @@ fn_flop_attn_generation = sp.lambdify(
     modules=["numpy"],
 )
 
+
 def count_flops_attention_prefill(seq_len, d_qk, d_hv, n_headq, **kwargs):
     """
     Count the flops for the attention operation during prefill.
@@ -46,7 +47,9 @@ def count_flops_attention_prefill(seq_len, d_qk, d_hv, n_headq, **kwargs):
     return fn_flop_attn_prefill(seq_len, d_qk, d_hv, n_headq)
 
 
-def count_flops_attention_generation(seq_len_pre, seq_len_gen, d_qk, d_hv, n_headq, **kwargs):
+def count_flops_attention_generation(
+    seq_len_pre, seq_len_gen, d_qk, d_hv, n_headq, **kwargs
+):
     """
     Count the flops for the attention operation during generation.
     """

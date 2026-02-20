@@ -9,7 +9,7 @@ from xlstm_scaling_laws.analysis.parametric_sclaw_fit.run_fit_grid import (
     params_from_filename,
 )
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,7 +40,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     LOGGER.info(args)
 
-
     fit_grids_dir = args.fit_grids_dir
     topk = args.topk
     output_dir = args.output_dir
@@ -52,20 +51,24 @@ if __name__ == "__main__":
     fit_grids_dir = Path(fit_grids_dir)
 
     for fit_grid_file in fit_grids_dir.glob("*.pkl"):
-
         LOGGER.info(f"Processing file: {fit_grid_file.name}")
         # Extract the parameters from the filename
         params = params_from_filename(fit_grid_file.name)
         LOGGER.info(f"Extracted parameters from filename: {params}")
 
         # Load the fit grid results
-        fit_grid_results = load_scaling_law_fit_grid_result(save_dir=fit_grids_dir, **params)
+        fit_grid_results = load_scaling_law_fit_grid_result(
+            save_dir=fit_grids_dir, **params
+        )
 
         # Combine the fit grid results into a DataFrame
         combined_fit_grid_df = combine_fit_grid_results_into_df(
             grid_result=fit_grid_results,
             topk=topk,
-            sort_by_col=("optim_results", "loss"), # Note: we sort by the objective / loss function
+            sort_by_col=(
+                "optim_results",
+                "loss",
+            ),  # Note: we sort by the objective / loss function
             ascending=True,
         )
 
@@ -74,6 +77,3 @@ if __name__ == "__main__":
         # Save the combined fit grid results to a pickle file
         combined_fit_grid_df.to_pickle(output_dir / filename)
         LOGGER.info(f"Saved combined fit grid results to: {output_dir / filename}")
-
-
-

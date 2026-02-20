@@ -23,6 +23,7 @@ def get_isoflop_styledict_with_colors(
         }
     return style_dict
 
+
 def get_context_styledict_with_colors(
     context_lengths: list[int], seaborn_color_palette: str = "Purples"
 ) -> dict[int, dict[str, Any]]:
@@ -31,7 +32,9 @@ def get_context_styledict_with_colors(
     style_dict = {}
     n_ctxs = len(context_lengths)
 
-    color_palette = sns.color_palette(sns.color_palette("Purples", n_ctxs + 1)[1:], n_colors=n_ctxs)
+    color_palette = sns.color_palette(
+        sns.color_palette("Purples", n_ctxs + 1)[1:], n_colors=n_ctxs
+    )
 
     for i, context_length in enumerate(context_lengths):
         style_dict[context_length] = {
@@ -74,7 +77,7 @@ def create_isocurve_plot(
     use_isoflop_color_for_optimum: bool = True,
     xticks: list[float] | None = None,
     xtick_labels: list[str] | None = None,
-    figsize: tuple[float, float] = (8., 6.),
+    figsize: tuple[float, float] = (8.0, 6.0),
 ) -> Axes:
     """Creates the isocurve plot for the given isoflop dataframe."""
 
@@ -86,8 +89,9 @@ def create_isocurve_plot(
     else:
         fig = None
 
-    assert isoflop_tags is not None or context_lengths is not None, \
-          "Either isoflop_tags or context_lengths must be provided."
+    assert isoflop_tags is not None or context_lengths is not None, (
+        "Either isoflop_tags or context_lengths must be provided."
+    )
     elements = isoflop_tags if isoflop_tags is not None else context_lengths
 
     for model_tag in model_tags_to_plot:
@@ -99,9 +103,7 @@ def create_isocurve_plot(
             # plot the isoflop data points
             # select the isoflop data for the current model tag
             if isoflop_tags is not None:
-                isoflop_tag_df = isoflop_model_df[
-                    isoflop_model_df["IsoFLOP"] == elem
-                ]
+                isoflop_tag_df = isoflop_model_df[isoflop_model_df["IsoFLOP"] == elem]
             else:
                 isoflop_tag_df = isoflop_model_df[
                     isoflop_model_df["context_length"] == elem
@@ -110,9 +112,7 @@ def create_isocurve_plot(
             x_data = isoflop_tag_df[x_col]
             y_data = isoflop_tag_df[y_col]
 
-            isoflop_datapoint_style_dict = isoflop_datapoints_style_dicts.get(
-                elem, {}
-            )
+            isoflop_datapoint_style_dict = isoflop_datapoints_style_dicts.get(elem, {})
 
             if model_type_alpha_override is not None:
                 # override the alpha value for the model type

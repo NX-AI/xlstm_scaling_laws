@@ -467,7 +467,11 @@ def count_flops_mlstm_cell_chunkwise_bw__tfla(
     )
 
     ## Parallel Backward Pass Intra deltaQ, deltaK, deltaV
-    bw_parallel_gates = chunk_size * (chunk_size + 1) + 2 * chunk_size + chunk_size * (factor_log + factor_sig)
+    bw_parallel_gates = (
+        chunk_size * (chunk_size + 1)
+        + 2 * chunk_size
+        + chunk_size * (factor_log + factor_sig)
+    )
 
     recomp_gate_matrix = (
         2 * chunk_size * chunk_size * d_qk + chunk_size * chunk_size * (factor_exp + 5)
@@ -573,9 +577,11 @@ def count_flops_mlstm_cell_chunkwise_fw__tfla(
         flops_fw_parallel_intra *= causal_factor
 
     # add the cumulative forgetgate flops (on these flops no causal factor is applied)
-    cumulative_forget_gates = float(num_heads) * float(
-        num_chunks
-    ) * (0.5 * chunk_size * (chunk_size + 1) + chunk_size * (factor_log + factor_sig))
+    cumulative_forget_gates = (
+        float(num_heads)
+        * float(num_chunks)
+        * (0.5 * chunk_size * (chunk_size + 1) + chunk_size * (factor_log + factor_sig))
+    )
     flops_fw_parallel_intra += cumulative_forget_gates
 
     ## Parallel computation of the inter outputs

@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from functools import partial
-from typing import Callable, Literal, TypeAlias, Union
+from typing import Literal, TypeAlias, Union
 
 import numpy as np
 
@@ -64,33 +65,32 @@ def roofline_model_logsumexp(
 def _softmin_stable(x1: float, x2: float, rho: float) -> float:
     max_c = -rho * np.minimum(x1, x2)
     softmin = -(1 / rho) * (
-        max_c
-        + np.log(
-            0.5 * (np.exp(-rho * x1 - max_c) + np.exp(-rho * x2 - max_c))
-        )
+        max_c + np.log(0.5 * (np.exp(-rho * x1 - max_c) + np.exp(-rho * x2 - max_c)))
     )
     return softmin
+
 
 def _softmax_stable(x1: float, x2: float, rho: float) -> float:
     max_c = rho * np.maximum(x1, x2)
     softmax = (1 / rho) * (
-        max_c
-        + np.log(
-            0.5 * (np.exp(rho * x1 - max_c) + np.exp(rho * x2 - max_c))
-        )
+        max_c + np.log(0.5 * (np.exp(rho * x1 - max_c) + np.exp(rho * x2 - max_c)))
     )
     return softmax
 
-def _get_runtime_model_arg_or_offset(count_args: CountArgs, key: str) -> CountType | None:
+
+def _get_runtime_model_arg_or_offset(
+    count_args: CountArgs, key: str
+) -> CountType | None:
     """Get a count argument from the count_args dictionary."""
     if key not in count_args:
         return None
-    
+
     offset = count_args.get(f"{key}_0", 0.0)
     if offset is None:
         return count_args[key]
 
     return count_args[key] + offset
+
 
 def runtime_model_attainable_flops_logsumexp(
     fn_flops_algo: CountFn,
@@ -132,6 +132,7 @@ def runtime_model_attainable_flops_logsumexp(
         "memops_algo": memops_algo,
     }
 
+
 def runtime_model_attainable_flops_min(
     fn_flops_algo: CountFn,
     fn_memops_algo: CountFn,
@@ -169,12 +170,15 @@ def runtime_model_attainable_flops_min(
         "memops_algo": memops_algo,
     }
 
+
 def _runtime_model_linear_flops_memops_generic(
     fn_flops_algo: CountFn,
     fn_memops_algo: CountFn,
     count_args: CountArgs,
     runtime_model_args: CountArgs,
-    mode: Literal["flops", "memops", "max_flops_memops", "sum_flops_memops"] = "max_flops_memops",
+    mode: Literal[
+        "flops", "memops", "max_flops_memops", "sum_flops_memops"
+    ] = "max_flops_memops",
 ) -> CountType:
     # Accelerator FLOP speed: maximum FLOPs / second of the GPU
     alpha = _get_runtime_model_arg_or_offset(runtime_model_args, "alpha")
@@ -189,7 +193,7 @@ def _runtime_model_linear_flops_memops_generic(
 
     # constant and batch size / prefill dependent overhead
     # overhead = eps_bp * count_args["batch_size"] * count_args["seq_len"] + eps
-    overhead = eps 
+    overhead = eps
 
     if mode == "flops":
         runtime = flops_algo / alpha + overhead
@@ -201,11 +205,14 @@ def _runtime_model_linear_flops_memops_generic(
         runtime = flops_algo / alpha + memops_algo / beta + overhead
     elif mode == "smooth_max_flops_memops":
         rho = _get_runtime_model_arg_or_offset(runtime_model_args, "rho")
-        runtime = _softmax_stable(
-            x1=flops_algo / alpha,
-            x2=memops_algo / beta,
-            rho=rho,
-        ) + overhead
+        runtime = (
+            _softmax_stable(
+                x1=flops_algo / alpha,
+                x2=memops_algo / beta,
+                rho=rho,
+            )
+            + overhead
+        )
     else:
         raise ValueError(f"Unknown mode: {mode}")
 
@@ -219,12 +226,15 @@ def _runtime_model_linear_flops_memops_generic(
 
 # for log space models alpha and beta are in log space
 
+
 def _runtime_model_log_linear_flops_memops_generic(
     fn_flops_algo: CountFn,
     fn_memops_algo: CountFn,
     count_args: CountArgs,
     runtime_model_args: CountArgs,
-    mode: Literal["flops", "memops", "max_flops_memops", "sum_flops_memops"] = "max_flops_memops",
+    mode: Literal[
+        "flops", "memops", "max_flops_memops", "sum_flops_memops"
+    ] = "max_flops_memops",
 ) -> CountType:
     # Accelerator FLOP speed: maximum FLOPs / second of the GPU
     alpha = _get_runtime_model_arg_or_offset(runtime_model_args, "alpha")
@@ -241,13 +251,17 @@ def _runtime_model_log_linear_flops_memops_generic(
     # constant and batch size / prefill dependent overhead
     # overhead = eps_bp * count_args["batch_size"] * count_args["seq_len"] + eps
     overhead = eps
-    
+
     if mode == "flops":
         runtime_log = np.log(flops_algo / alpha + overhead)
     elif mode == "memops":
-        runtime_log = np.log(memops_algo / beta + overhead + count_args["batch_size"] * eps_bp)
+        runtime_log = np.log(
+            memops_algo / beta + overhead + count_args["batch_size"] * eps_bp
+        )
     elif mode == "max_flops_memops":
-        runtime_log = np.log(np.maximum(flops_algo / alpha, memops_algo / beta) + overhead)
+        runtime_log = np.log(
+            np.maximum(flops_algo / alpha, memops_algo / beta) + overhead
+        )
     elif mode == "sum_flops_memops":
         runtime_log = np.log(flops_algo / alpha + memops_algo / beta + overhead)
     elif mode == "smooth_max_flops_memops":
@@ -257,7 +271,8 @@ def _runtime_model_log_linear_flops_memops_generic(
                 x1=flops_algo / alpha,
                 x2=memops_algo / beta,
                 rho=rho,
-            ) + overhead
+            )
+            + overhead
         )
     else:
         raise ValueError(f"Unknown mode: {mode}")
@@ -268,6 +283,7 @@ def _runtime_model_log_linear_flops_memops_generic(
         "flops_algo": flops_algo,
         "memops_algo": memops_algo,
     }
+
 
 def runtime_model_log_attainable_flops_min(
     fn_flops_algo: CountFn,
@@ -291,7 +307,9 @@ def runtime_model_log_attainable_flops_min(
     arithmetic_intensity = flops_algo / memops_algo
 
     # attainable_flops is the maximum FLOPs that can be achieved given the runtime model parameters
-    attainable_flops_log = np.minimum(alpha, beta + np.log(flops_algo) - np.log(memops_algo))
+    attainable_flops_log = np.minimum(
+        alpha, beta + np.log(flops_algo) - np.log(memops_algo)
+    )
 
     runtime_log = np.log(flops_algo) - attainable_flops_log
 
@@ -301,6 +319,7 @@ def runtime_model_log_attainable_flops_min(
         "attainable_flops": attainable_flops_log,
         "flops_algo": flops_algo,
     }
+
 
 def runtime_model_log_attainable_flops_logsumexp(
     fn_flops_algo: CountFn,
@@ -340,41 +359,52 @@ def runtime_model_log_attainable_flops_logsumexp(
         "memops_algo": memops_algo,
     }
 
+
 _runtime_model_registry: dict[str, Callable] = {
     "attainable_flops_logsumexp": runtime_model_attainable_flops_logsumexp,
     "attainable_flops_min": runtime_model_attainable_flops_min,
     "linear_max_flops_memops": partial(
         _runtime_model_linear_flops_memops_generic,
-        mode="max_flops_memops",),
+        mode="max_flops_memops",
+    ),
     "linear_flops": partial(
         _runtime_model_linear_flops_memops_generic,
-        mode="flops",),
+        mode="flops",
+    ),
     "linear_memops": partial(
         _runtime_model_linear_flops_memops_generic,
-        mode="memops",),
+        mode="memops",
+    ),
     "linear_sum_flops_memops": partial(
         _runtime_model_linear_flops_memops_generic,
-        mode="sum_flops_memops",),
+        mode="sum_flops_memops",
+    ),
     "smooth_max_flops_memops": partial(
         _runtime_model_linear_flops_memops_generic,
-        mode="smooth_max_flops_memops",),
+        mode="smooth_max_flops_memops",
+    ),
     "log_attainable_flops_min": runtime_model_log_attainable_flops_min,
     "log_attainable_flops_logsumexp": runtime_model_log_attainable_flops_logsumexp,
     "log_linear_max_flops_memops": partial(
         _runtime_model_log_linear_flops_memops_generic,
-        mode="max_flops_memops",),
+        mode="max_flops_memops",
+    ),
     "log_linear_flops": partial(
         _runtime_model_log_linear_flops_memops_generic,
-        mode="flops",),
+        mode="flops",
+    ),
     "log_linear_memops": partial(
         _runtime_model_log_linear_flops_memops_generic,
-        mode="memops",),
+        mode="memops",
+    ),
     "log_linear_sum_flops_memops": partial(
         _runtime_model_log_linear_flops_memops_generic,
-        mode="sum_flops_memops",),
+        mode="sum_flops_memops",
+    ),
     "log_smooth_max_flops_memops": partial(
         _runtime_model_log_linear_flops_memops_generic,
-        mode="smooth_max_flops_memops",),
+        mode="smooth_max_flops_memops",
+    ),
 }
 
 

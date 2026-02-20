@@ -1,4 +1,5 @@
-from typing import Callable, Literal
+from collections.abc import Callable
+from typing import Literal
 
 import numpy as np
 import pandas as pd
@@ -70,24 +71,26 @@ def get_lnd_scaling_law_hoffmann_fn(
     """Get the L(N, D) scaling law function for Hoffmann et al. Chinchilla.
     The returned function takes two arguments: nparams and ntoks, and returns the (non-log) loss.
     """
-    return lambda nparams, ntoks: (
-        np.exp(
-            log_scaling_law_hoffmann(
-                nparams,
-                ntoks,
-                a=a,
-                b=b,
-                e=e,
-                alpha=alpha,
-                beta=beta,
-                gamma=gamma,
-                return_mode=return_mode,
-            )
+    return lambda nparams, ntoks: np.exp(
+        log_scaling_law_hoffmann(
+            nparams,
+            ntoks,
+            a=a,
+            b=b,
+            e=e,
+            alpha=alpha,
+            beta=beta,
+            gamma=gamma,
+            return_mode=return_mode,
         )
     )
 
+
 def get_first_n_fits_as_fit_fn_dict(
-    result_fit_df: pd.DataFrame, key_prefix: str, n: int = 3, return_mode: ScalingLawReturnMode = "logsumexp"
+    result_fit_df: pd.DataFrame,
+    key_prefix: str,
+    n: int = 3,
+    return_mode: ScalingLawReturnMode = "logsumexp",
 ) -> dict:
     """
     Get the first n fits as a dictionary.
@@ -99,13 +102,19 @@ def get_first_n_fits_as_fit_fn_dict(
 
     # Convert the list of dictionaries to a single dictionary
     fitted_params_dict = {}
-    for fit_params, optim_results, val_results in zip(fitted_params_list, optim_results_list, val_results_list):
+    for fit_params, optim_results, val_results in zip(
+        fitted_params_list, optim_results_list, val_results_list
+    ):
         fitted_params_dict[
             f"{key_prefix}"
             + "_".join([f"{key}{value:.3f}" for key, value in fit_params.items()])
             + f"__loss{optim_results['loss']:.3e}"
-            + "_".join([f"{key}{value:.2f}" for key, value in val_results.items() if "tokenparam" in key])
+            + "_".join(
+                [
+                    f"{key}{value:.2f}"
+                    for key, value in val_results.items()
+                    if "tokenparam" in key
+                ]
+            )
         ] = get_lnd_scaling_law_hoffmann_fn(**fit_params, return_mode=return_mode)
     return fitted_params_dict
-
-

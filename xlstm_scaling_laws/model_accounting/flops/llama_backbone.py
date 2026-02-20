@@ -1,4 +1,4 @@
-# In this file we count all flops for the Llama backbone that are 
+# In this file we count all flops for the Llama backbone that are
 # sequence length independent, i.e. these flops are computed for every token in the sequence.
 
 import sympy as sp
@@ -23,30 +23,20 @@ flop_attn_qkv = 2 * d_model * (d_qk * n_headq + d_qk * n_headkv + d_hv * n_headk
 # flops for the attention operation
 flop_outproj = 2 * d_model * n_headkv * d_hv
 
-flop_attn_layer = (
-    flop_attn_prenorm_skip
-    + flop_attn_qkv
-    + flop_outproj
-)
+flop_attn_layer = flop_attn_prenorm_skip + flop_attn_qkv + flop_outproj
 
 # ffn layer flops
 flop_ffn_prenorm_skip = d_model * (F_skip + F_norm)
 flop_ffn_mlps = 6 * d_model * d_ff
 flop_ffn_act = d_ff * (1 + F_swish)
 
-flop_ffn = (
-    flop_ffn_prenorm_skip
-    + flop_ffn_mlps
-    + flop_ffn_act
-)
+flop_ffn = flop_ffn_prenorm_skip + flop_ffn_mlps + flop_ffn_act
 
 # final linear layer / unembedding + outnorm
 flop_final_unembed = 2 * d_model * n_vocab
 flop_outnorm = d_model * F_norm
 
-flop_llama_backbone_blocks = n_blocks * (
-    flop_attn_layer + flop_ffn
-)
+flop_llama_backbone_blocks = n_blocks * (flop_attn_layer + flop_ffn)
 flop_llama_backbone_withfinallinear = (
     flop_llama_backbone_blocks + flop_outnorm + flop_final_unembed
 )
@@ -66,12 +56,13 @@ fn_flop_llama_backbone = sp.lambdify(
     modules=["numpy"],
 )
 
+
 def count_flops_llama_backbone(
     n_vocab, n_blocks, d_ff, n_headq, d_qk, d_hv, n_headkv, with_unembed=True
 ):
     """
     Count the flops for the Llama backbone.
-    
+
     Parameters:
         n_vocab (int): Vocabulary size.
         n_blocks (int): Number of blocks.

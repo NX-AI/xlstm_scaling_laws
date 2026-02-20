@@ -99,20 +99,28 @@ def count_memops_mlstmexp_chunkwise_parallel(
     """
     Count memory operations for mLSTMexp in chunkwise-parallel formulation for a single sequence.
     """
-    return batch_size * n_headq * fn_memops_mlstmexp_chunkwise_parallel(
-        chunk_size,
-        seq_len,
-        d_qk,
-        d_hv,
-        bytes_act,
-        bytes_Cmn,
+    return (
+        batch_size
+        * n_headq
+        * fn_memops_mlstmexp_chunkwise_parallel(
+            chunk_size,
+            seq_len,
+            d_qk,
+            d_hv,
+            bytes_act,
+            bytes_Cmn,
+        )
     )
 
 
-def count_memops_mlstmexp_recurrent(batch_size, seq_len, n_headq, d_qk, d_hv, bytes_act, bytes_Cmn):
+def count_memops_mlstmexp_recurrent(
+    batch_size, seq_len, n_headq, d_qk, d_hv, bytes_act, bytes_Cmn
+):
     """
     Memory operations for mLSTMexp in recurrent formulation for a single sequence.
     """
-    return batch_size * n_headq * fn_memops_mlstmexp_recurrent(
-        seq_len, d_qk, d_hv, bytes_act, bytes_Cmn
+    return (
+        batch_size
+        * n_headq
+        * fn_memops_mlstmexp_recurrent(seq_len, d_qk, d_hv, bytes_act, bytes_Cmn)
     )

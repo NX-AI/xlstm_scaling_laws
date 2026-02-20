@@ -239,7 +239,11 @@ def get_isoflop_datapoints_for_compute(compute: str, model_name=None) -> pd.Data
             return_only_selected_runs=True,
         )
         return pd.concat(
-            [isoflop_llama_ctx2048_df, isoflop_llama_ctx8192_df, isoflop_llama_ctx16384_df],
+            [
+                isoflop_llama_ctx2048_df,
+                isoflop_llama_ctx8192_df,
+                isoflop_llama_ctx16384_df,
+            ],
             ignore_index=True,
             axis=0,
         )
@@ -258,12 +262,22 @@ def get_isoflop_datapoints_for_compute(compute: str, model_name=None) -> pd.Data
             return_only_selected_runs=True,
         )
         return pd.concat(
-            [isoflop_mlstm_ctx2048_df, isoflop_mlstm_ctx8192_df, isoflop_mlstm_ctx16384_df],
+            [
+                isoflop_mlstm_ctx2048_df,
+                isoflop_mlstm_ctx8192_df,
+                isoflop_mlstm_ctx16384_df,
+            ],
             ignore_index=True,
             axis=0,
         )
-    
-    dfs = [_load_llama(), _load_mlstm()] if model_name is None else [_load_llama()] if model_name == "llama" else [_load_mlstm()]
+
+    dfs = (
+        [_load_llama(), _load_mlstm()]
+        if model_name is None
+        else [_load_llama()]
+        if model_name == "llama"
+        else [_load_mlstm()]
+    )
 
     isoflop_df = pd.concat(
         dfs,
@@ -275,7 +289,7 @@ def get_isoflop_datapoints_for_compute(compute: str, model_name=None) -> pd.Data
     isoflop_df["context_length"] = isoflop_df["context_length"].astype("string")
 
     # Filter the dataframe for the given compute
-    isoflop_df = isoflop_df[isoflop_df["IsoFLOP"] == compute] 
+    isoflop_df = isoflop_df[isoflop_df["IsoFLOP"] == compute]
 
     return isoflop_df
 
@@ -344,7 +358,9 @@ def get_isoflop_polyfits_for_compute(
 
     polyfit_dfs = []
     for i, model_name in enumerate(model_names):
-        isoflop_df = get_isoflop_datapoints_for_compute(compute=compute, model_name=model_name)
+        isoflop_df = get_isoflop_datapoints_for_compute(
+            compute=compute, model_name=model_name
+        )
         isoflop_polyfit_df = generate_isoflop_polynomial_fits(
             isoflop_df=isoflop_df,
             x_col=x_col,

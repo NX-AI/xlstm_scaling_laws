@@ -1,12 +1,11 @@
+"""In this file we define the code that is used to do linear fits for the training FLOPs vs. val loss plot."""
+
 from typing import Literal
 
 import numpy as np
 import pandas as pd
 from matplotlib.axes import Axes
 from scipy.optimize import curve_fit
-
-"""In this file we define the code that is used to do linear fits for the training FLOPs vs. val loss plot.
-"""
 
 
 def linear_fit(x, a, b):
@@ -78,14 +77,23 @@ def create_slope_summary_df(
         token_param_ratio_col=token_param_ratio_col,
     )
 
-    def _create_summary_dict_for_token_param_ratio(fit: tuple[np.ndarray, np.ndarray]) -> dict[str, float]:
+    def _create_summary_dict_for_token_param_ratio(
+        fit: tuple[np.ndarray, np.ndarray],
+    ) -> dict[str, float]:
         slope, intercept = fit[0]
         stderr_slope, stderr_intercept = np.diag(fit[1])
-        return {"slope": slope, "intercept": intercept, "stderr_slope": stderr_slope, "stderr_intercept": stderr_intercept}
-    
+        return {
+            "slope": slope,
+            "intercept": intercept,
+            "stderr_slope": stderr_slope,
+            "stderr_intercept": stderr_intercept,
+        }
+
     summary_dict = {}
     for token_param_ratio, fit in fits.items():
-        summary_dict[token_param_ratio] = _create_summary_dict_for_token_param_ratio(fit)
+        summary_dict[token_param_ratio] = _create_summary_dict_for_token_param_ratio(
+            fit
+        )
     return pd.DataFrame(summary_dict).T
 
 

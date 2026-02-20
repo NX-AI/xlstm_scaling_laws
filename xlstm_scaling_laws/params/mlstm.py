@@ -1,13 +1,15 @@
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 from .common import count_model_params, count_params_ffn_llama_layer
 
 if TYPE_CHECKING:
     from .count_params import ParamCountConfig
 
+
 def count_mlstm_model_params(
     model_kwargs: dict[str, Any],
-    config: "ParamCountConfig", 
+    config: "ParamCountConfig",
 ) -> float:
     vocab_size = model_kwargs["vocab_size"]
     num_blocks = model_kwargs["num_blocks"]
@@ -94,9 +96,8 @@ def count_mlstm_block_params(
 
     return mlstm_layer_params + ffn_layer_params
 
-def get_ffn_dim(
-    model_kwargs: dict[str, Any]
-) -> int:
+
+def get_ffn_dim(model_kwargs: dict[str, Any]) -> int:
     from .common import get_ffn_dim
 
     return get_ffn_dim(

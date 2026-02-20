@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any
 
 from ..common.run_fit import OptimizationConfig, run_optimization
 from .objective_funcs import (

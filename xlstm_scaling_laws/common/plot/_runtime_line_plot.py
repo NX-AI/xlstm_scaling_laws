@@ -25,6 +25,7 @@ def create_group_names_from_cols(
         group_names.append(group_str)
     return group_names
 
+
 def create_line_plot(
     data_df: pd.DataFrame,
     group_col_names: list[str],

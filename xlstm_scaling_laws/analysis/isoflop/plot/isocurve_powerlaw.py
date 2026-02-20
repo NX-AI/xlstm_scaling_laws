@@ -58,10 +58,10 @@ def get_isoflop_powerlaw_plot(
         "num_tokens_training": ["4B", "10B", "20B", "40B", "100B", "200B", "400B"],
     },
     y_axis_labelpad_powerlaw_plot: dict[str, float] = {
-        "num_params": 2.,
-        "num_tokens_training": 2.,
+        "num_params": 2.0,
+        "num_tokens_training": 2.0,
     },
-    legend_kwargs = {
+    legend_kwargs={
         "loc": "upper right",
         "ncol": 1,
         "bbox_to_anchor": (1.05, 0.9),
@@ -93,21 +93,29 @@ def get_isoflop_powerlaw_plot(
     isoflop_tags = isoflop_polyfits_df["isoflop_tag"].unique().tolist()
 
     if fig is None and ax is None:
-        fig, ax = plt.subplots(ncols=2, nrows=1, figsize=figsize, gridspec_kw=gridspec_kw)
+        fig, ax = plt.subplots(
+            ncols=2, nrows=1, figsize=figsize, gridspec_kw=gridspec_kw
+        )
 
     isoflop_style_dict = get_isoflop_styledict_with_colors(
-            isoflop_tags=isoflop_tags, seaborn_color_palette="deep"
-        )
+        isoflop_tags=isoflop_tags, seaborn_color_palette="deep"
+    )
 
     ax_isocurve = create_isocurve_plot(
         ax=ax[0],
-        isoflop_tags=['6e+18', '1e+19', '3e+19', '1e+20', '6e+20'],  # plot all isoflop tags
+        isoflop_tags=[
+            "6e+18",
+            "1e+19",
+            "3e+19",
+            "1e+20",
+            "6e+20",
+        ],  # plot all isoflop tags
         isoflop_df=isoflop_datapoints_df,
         isoflop_polyfit_df=isoflop_polyfits_df,
         x_col=plot_type,
         model_tags_to_plot=["llama", "mlstm_v1"],
         y_col=y_col,
-        isoflop_datapoints_style_dicts = isoflop_style_dict,
+        isoflop_datapoints_style_dicts=isoflop_style_dict,
         isoflop_polyfit_style_dicts=isoflop_style_dict,
         model_type_alpha_override={"llama": llama_alpha_isocurve},
         model_type_datapoints_style_dicts=model_type_datapoints_style_dicts,
@@ -133,9 +141,11 @@ def get_isoflop_powerlaw_plot(
         add_fit_result_to_legend_label=True,
         plot_type=plot_type,
         model_type_optimum_style_dict=model_type_optimum_style_dicts,
-        legend_kwargs={"fontsize": 12}
+        legend_kwargs={"fontsize": 12},
     )
-    ax_powerlaw.set_ylabel(axis_labels[plot_type], labelpad=y_axis_labelpad_powerlaw_plot[plot_type])
+    ax_powerlaw.set_ylabel(
+        axis_labels[plot_type], labelpad=y_axis_labelpad_powerlaw_plot[plot_type]
+    )
 
     ax_powerlaw.set_yticks(yticks_powerlaw_plot[plot_type])
     ax_powerlaw.set_yticklabels(ytick_labels_powerlaw_plot[plot_type])
@@ -145,12 +155,12 @@ def get_isoflop_powerlaw_plot(
 
     def _get_isoflop_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
-            Patch(color="none", label=" "*16),
+            Patch(color="none", label=" " * 16),
         ]
         # extract the unique isoflop tags from the legend labels
-        isoflop_tags = set(
+        isoflop_tags = {
             float(label.split("_")[1]) for label in legend_label_handle_map.keys()
-        )
+        }
         isoflop_tags = sorted(isoflop_tags)
         # extract the colors for each isoflop tag
         for isoflop in isoflop_tags:
@@ -162,12 +172,12 @@ def get_isoflop_powerlaw_plot(
 
     def _get_datapoint_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
-            Patch(color="none", label=" "*16),
+            Patch(color="none", label=" " * 16),
         ]
         # extract the unique model tags from the legend labels
-        model_tags = set(
+        model_tags = {
             "_".join(label.split("_")[2:]) for label in legend_label_handle_map.keys()
-        )
+        }
         model_tags = sorted(model_tags)
         # extract the colors for each model tag
         for model_tag in model_tags:
@@ -191,12 +201,12 @@ def get_isoflop_powerlaw_plot(
 
     def _get_optima_legend_elements(legend_label_handle_map: dict) -> list:
         legend_elements = [
-            Patch(color="none", label=" "*16),
+            Patch(color="none", label=" " * 16),
         ]
         # extract the unique model tags from the legend labels
-        model_tags = set(
+        model_tags = {
             "_".join(label.split("_")[2:]) for label in legend_label_handle_map.keys()
-        )
+        }
         model_tags = sorted(model_tags)
         # extract the colors for each model tag
         for model_tag in model_tags:
@@ -232,17 +242,21 @@ def get_isoflop_powerlaw_plot(
     fig.legend(handles=legend_elements, **legend_kwargs)
 
     if add_header:
-        for text, offset in zip([
-            r"$\mathbf{Compute}$",
-            r"$\mathbf{Training\ Runs}$",
-            r"$\mathbf{FLOP\ Optima}$",
-        # ], [0.0, 0.375, 0.57]): # for 4.6 height
-        ], [0.01, 0.435, 0.658]): # for 4.0 height
+        for text, offset in zip(
+            [
+                r"$\mathbf{Compute}$",
+                r"$\mathbf{Training\ Runs}$",
+                r"$\mathbf{FLOP\ Optima}$",
+                # ], [0.0, 0.375, 0.57]): # for 4.6 height
+            ],
+            [0.01, 0.435, 0.658],
+        ):  # for 4.0 height
             fig.text(
-                0.932, #0.979, # align center
+                0.932,  # 0.979, # align center
                 0.86 - offset,
                 text,
-                ha='left', va='top',
+                ha="left",
+                va="top",
                 fontsize=14,
                 zorder=99,
             )

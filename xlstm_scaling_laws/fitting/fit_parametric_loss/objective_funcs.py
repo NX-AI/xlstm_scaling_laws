@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import partial
-from typing import Callable, Literal
+from typing import Literal
 
 import numpy as np
 import pandas as pd

@@ -20,7 +20,7 @@ class FlopCountConfig:
     If True, FLOPs are computed like a linear layer, i.e. 2 * embedding_dim * vocab_size (* seq_len).
     If False, FLOPs are set to 0.
 
-    Note: In the chinchilla paper the embedding FLOPs are included, but more realistic would be to not include them. 
+    Note: In the chinchilla paper the embedding FLOPs are included, but more realistic would be to not include them.
     See here: https://jax-ml.github.io/scaling-book/transformers/
     """
     include_final_logit_flops: bool = True
@@ -87,14 +87,14 @@ class FlopCountConfig:
             string_repr += f"llama_fw-{self.attention_flop_calc_mode}"
         else:
             raise ValueError
-        
+
         string_repr += f"--round_ffn-{self.round_ffn_dim_to_multiple_of_for_flops}"
 
         if not fw_only:
             string_repr += f"--bw-{self.bw_flop_count_mode}"
             if self.bw_flop_count_mode == "factor_2_linear_custom_seqmix_factor":
                 string_repr += f"-seq_mix_bw_factor-{self.seq_mix_bw_flop_factor}"
-            
+
             string_repr += f"--incl_emb-{self.include_embedding_flops}--incl_logit-{self.include_final_logit_flops}"
         return string_repr
 
@@ -170,7 +170,11 @@ def count_model_flops_fwbw(
         assert seq_mix_flops_fwbw == 0.0, "The sequence mix flops should be 0.0."
 
         if model_type == "mlstm_v1":
-            seq_mix_flops_bw_total, seq_mix_flops_bw_recurrent, seq_mix_flops_bw_parallel = count_model_flops_bw_mlstm_cell_only(
+            (
+                seq_mix_flops_bw_total,
+                seq_mix_flops_bw_recurrent,
+                seq_mix_flops_bw_parallel,
+            ) = count_model_flops_bw_mlstm_cell_only(
                 model_kwargs=model_kwargs,
                 context_length=context_length,
                 config=config,
@@ -184,8 +188,6 @@ def count_model_flops_fwbw(
         total_flops_fwbw = linear_flops_fwbw + seq_mix_flops_fwbw + other_flops_fwbw
 
     return total_flops_fwbw, linear_flops_fwbw, seq_mix_flops_fwbw, other_flops_fwbw
-
-
 
 
 def fw_flop_count_heuristic(

@@ -112,7 +112,7 @@ def download_wandb_run_data(
 
 def download_wandb_run_data_per_tag(
     path: str,
-    tags: list[str | list[str]], # enable filtering by one or more tags
+    tags: list[str | list[str]],  # enable filtering by one or more tags
     order: str = None,
     log_keys: list[str] = None,
     samples: int = int(1e6),

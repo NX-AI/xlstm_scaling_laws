@@ -45,6 +45,8 @@ def get_all_parametric_sclaw_fit_data_dataframe(
         "head_dim_v",
         "IsoFLOP",
         "train/.loss_mean",
+        "run_id",
+        "model_checkpoint_paths",
     ]
 
     # load the isoflop data
@@ -86,19 +88,22 @@ def get_all_parametric_sclaw_fit_data_dataframe(
             round_mode = "floor_multiple_of"
         else:
             raise ValueError(f"Unknown model type {row['model_type']}")
-        
+
         return get_ffn_dim(
             d_model=row["embedding_dim"],
             proj_factor=row["proj_factor_ffn"],
             ffn_multiple_of=row["ffn_multiple_of"],
             round_mode=round_mode,
         )
+
     combined_df["ffn_dim"] = combined_df.apply(_compute_ffn_dim, axis=1)
 
     # compute the head dims
     def _compute_qk_head_dim(row):
         if row["model_type"] == "mlstm_v1":
-            return int((row["embedding_dim"] // row["num_heads"]) * row["proj_factor_qk"])
+            return int(
+                (row["embedding_dim"] // row["num_heads"]) * row["proj_factor_qk"]
+            )
         elif row["model_type"] == "llama":
             return float("nan")
         else:
@@ -114,7 +119,7 @@ def get_all_parametric_sclaw_fit_data_dataframe(
 
     combined_df["head_dim_qk"] = combined_df.apply(_compute_qk_head_dim, axis=1)
     combined_df["head_dim_v"] = combined_df.apply(_compute_v_head_dim, axis=1)
-    
+
     # add num heads
     def _compute_num_heads(row):
         if row["model_type"] == "mlstm_v1":
