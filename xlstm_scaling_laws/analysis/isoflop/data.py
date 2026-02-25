@@ -7,6 +7,12 @@ from ...fitting.fit_isoflop_polynomials import generate_isoflop_polynomial_fits
 from ...load_data.datafiles import RunDataSet
 from ...load_data.isoflop import create_isoflop_data_table
 
+# Due to a renaming in wandb and a repeated download of these runs,
+# they are duplicated in the run table. This flag controls whether to filter the duplicates or not.
+# We add this flag for backwards compatibility, e.g. to be able to reproduce the old plots with the duplicated runs if needed.
+
+FILTER_MLSTM_DUPLICATES = True
+
 
 @cache
 def create_combined_isoflop_data_table(
@@ -98,7 +104,12 @@ def _filter_isoflop_df_mlstm_ctx8192(raw_isoflop_df: pd.DataFrame) -> pd.DataFra
     isoflop_df = isoflop_df[
         ~((isoflop_df["IsoFLOP"] == "6e+20") & (isoflop_df["val/.dclm_loss"] > 3.0))
     ]
-
+    # filter duplicates due to wandb tag renaming
+    if FILTER_MLSTM_DUPLICATES:
+        isoflop_df = isoflop_df.sort_values(by=["run_tag"])
+        isoflop_df = isoflop_df[
+            ~isoflop_df.drop(columns=["run_tag"]).duplicated(keep="first")
+        ]
     return isoflop_df
 
 
