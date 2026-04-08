@@ -41,6 +41,30 @@ xlstm_scaling_laws/
 └── README.md                # This file
 ```
 
+## Using the xLSTM Scaling Law Checkpoints
+
+We will make xLSTM checkpoints from our scaling law study available on huggingface: https://huggingface.co/NX-AI/xlstm_scaling_laws
+
+Download the respective checkpoints from our huggingface repository and then run inference with the huggingface xLSTM-7B implementation.
+
+For this we use the script `scripts/run_xlstm_model_from_checkpoint.py`.
+
+Requirements:
+- Install the mlstm_kernels package: `pip install mlstm_kernels`
+- Install the official xlstm package: `pip install xlstm`
+- Install huggingface transformers: `pip install transformers`
+
+Example usage:
+
+```
+# In the directory of xlstm_scaling_laws repository:
+PYTHONPATH=. python scripts/run_xlstm_model_from_checkpoint.py --ckpt_path "[YOUR_PATH_TO_CHECKPOINTS]/mlstm_v1--tokenparam--ctx-8192--params-164.11M--tokens-361.76B--id-y5s6gd5v/"
+```
+
+If you wish to use the xLSTM checkpoints directly with our xlstm_large implementation (https://github.com/NX-AI/xlstm/blob/main/xlstm/xlstm_large/model.py), you need to convert the checkpoint.
+Only the embedding table has a different parameter key, which needs to be changed.
+E.g. `.embedding` (xlstm_large, xlstm version) vs. `.backbone.embeddings` (xLSTM 7B, hugginface transformers version)
+
 ## Dataset of Training Runs
 
 We provide all experiment logs and run data in several pickle files in the `data/` folder.

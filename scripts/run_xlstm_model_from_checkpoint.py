@@ -2,15 +2,16 @@
 This script demonstrates how to load an xLSTM model from a checkpoint and generate text with it. It first generates text with randomly initialized weights to show the difference, and then loads the pretrained weights and generates text again.
 """
 
+import argparse
+
 import torch
 from transformers import AutoTokenizer
 
 from xlstm_scaling_laws.checkpoint_loading import load_xlstm_model_from_checkpoint
 
 
-def main():
+def main(ckpt_path: str):
 
-    model_path = "/nfs-gpu/users_work/beck/xlstm_sclaw_ckpts/converted/xlstm/tokenparam/mlstm_v1--tokenparam--ctx-8192--params-1.42B--tokens-1.56T--id-7wwry7p1"
     torch.set_default_device("cuda:0")
 
     # this is a fork of EleutherAI/gpt-neox-20b
@@ -32,7 +33,7 @@ def main():
 
     # Generate with random model
     print("Generating with random model...")
-    xlstm = load_xlstm_model_from_checkpoint(model_path, load_weights=False).to(
+    xlstm = load_xlstm_model_from_checkpoint(ckpt_path, load_weights=False).to(
         device="cuda:0"
     )
     out = xlstm.generate(
@@ -48,7 +49,7 @@ def main():
 
     # Generate with pretrained model
     print("\nGenerating with pretrained model...")
-    xlstm = load_xlstm_model_from_checkpoint(model_path, load_weights=True).to(
+    xlstm = load_xlstm_model_from_checkpoint(ckpt_path, load_weights=True).to(
         device="cuda:0"
     )
     out = xlstm.generate(
@@ -63,4 +64,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--ckpt_path",
+        type=str,
+        required=True,
+        help="Path to the checkpoint to load.",
+    )
+    args = parser.parse_args()
+    print(args)
+    main(args.ckpt_path)

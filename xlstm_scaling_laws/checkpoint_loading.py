@@ -59,6 +59,10 @@ def load_xlstm_model_from_checkpoint(ckpt_path: str | Path, load_weights: bool =
 
     if load_weights:
         state_dict = load_from_pretrained(ckpt_path)
+        first_tensor = next(iter(state_dict.values()))
+        print(
+            f"Loading model from checkpoint with {len(state_dict)} tensors. Example tensor shape: {first_tensor.shape}, dtype: {first_tensor.dtype}"
+        )
         model.load_state_dict(state_dict)
 
     return model
