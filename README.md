@@ -1,5 +1,7 @@
 # xLSTM Scaling Laws: Competitive Performance with Linear Time-Complexity
 
+[![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
+
 <img src="./res/plot_lnd_pareto_combined_llama_mlstm.svg" width="800px" alt="xLSTM Scaling Laws Figure 1">
 
 >Paper: [http://arxiv.org/abs/2510.02228](http://arxiv.org/abs/2510.02228) (Accepted at ICLR 2026)
@@ -102,3 +104,7 @@ Please cite our papers if you use this codebase, or otherwise find our work valu
   url          = {http://arxiv.org/abs/2510.02228}
 }
 ```
+
+## License
+
+xLSTM Scaling Laws is licensed under the [Apache License 2.0](./LICENSE).
