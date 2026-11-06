@@ -94,14 +94,15 @@ The `scripts/` directory contains the scripts for running the parametric L(N,D) 
 Please cite our papers if you use this codebase, or otherwise find our work valuable:
 
 ```
-@article{beck:25xlstmscaling,
-  title        = {{xLSTM Scaling Laws}: Competitive Performance with Linear Time-Complexity},
-  author       = {Maximilian Beck and Kajetan Schweighofer and Sebastian Böck and Sebastian Lehner and Sepp Hochreiter},
-  year         = {2025},
-  volume       = {2510.02228},
-  journal      = {arXiv},
-  primaryclass = {cs.LG},
-  url          = {http://arxiv.org/abs/2510.02228}
+@inproceedings{beck:25xlstmscaling,
+  title     = {{xLSTM Scaling Laws}: Competitive Performance with Linear Time-Complexity},
+  author    = {Beck, Maximilian and Schweighofer, Kajetan and B{\"o}ck, Sebastian and Lehner, Sebastian and Hochreiter, Sepp},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2026},
+  eprint    = {2510.02228},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url       = {https://arxiv.org/abs/2510.02228}
 }
 ```
 
